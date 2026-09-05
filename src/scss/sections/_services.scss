@@ -1,0 +1,589 @@
+@use "../variables" as *;
+
+.services {
+  overflow-x: hidden;
+  position: relative;
+  width: 100%;
+  height: auto;
+  min-height: 100vh;
+  @include flex($justify: center, $align: stretch);
+  padding: 120px 16px;
+  background-color: $bg-main;
+  background-image: url("/src/assets/images/waterDrops.png");
+  background-position: top left;
+  background-repeat: repeat;
+  background-size: auto;
+  overflow: hidden;
+
+  &__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(
+      rgba($bg-main, 0.3) 0%,
+      rgba($bg-main, 0.3) 100%
+    );
+
+    &::before {
+      content: "";
+      position: absolute;
+      z-index: 1;
+      bottom: 25%;
+      left: 0;
+      transform: translateY(25%);
+      width: 100%;
+      height: 60%;
+      filter: blur(50px);
+      background: rgba($dark-green, 0.5);
+      pointer-events: none;
+    }
+  }
+
+  &__container {
+    position: relative;
+    @include container-base;
+    @include flex(column, $justify: flex-start, $align: flex-start);
+  }
+
+  &__header {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 32px;
+    margin-bottom: 48px;
+  }
+
+  &__title {
+    position: relative;
+    z-index: 1;
+    font-size: 48px;
+    font-weight: $bold;
+    text-transform: uppercase;
+    color: white;
+
+    @media screen and (max-width: 360px) {
+      font-size: 42px;
+    }
+
+    &::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      font-size: 48px;
+      font-weight: $bold;
+      color: transparent;
+      -webkit-text-stroke: 1px white;
+      text-stroke: 1px white;
+      transform: translate(-5px, 0);
+      z-index: -1;
+      pointer-events: none;
+
+      @media screen and (max-width: 360px) {
+        font-size: 42px;
+      }
+    }
+  }
+
+  &__nav {
+    @include flex();
+    gap: 64px;
+    width: fit-content;
+
+    @media screen and (max-width: 640px) {
+      display: none;
+      visibility: hidden;
+      opacity: 0;
+    }
+  }
+
+  &__arrow-btn {
+    border: 1px solid $dark-green;
+    border-radius: 4px;
+    aspect-ratio: 1 / 1;
+    width: 52px;
+    background-color: rgba($dark-green, 0.5);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;
+    transition:
+      background-color 0.3s ease,
+      box-shadow 0.3s ease,
+      transform 0.1s ease;
+
+    &.is-disabled {
+      opacity: 0.8;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        background-color: rgba($dark-green, 0.8);
+        box-shadow: inset 0 0 4px 0 $light-blue;
+      }
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    &--left {
+      background-image: url("/src/assets/icons/chevron-left.svg");
+    }
+    &--right {
+      background-image: url("/src/assets/icons/chevron-right.svg");
+    }
+  }
+
+  &__tabs {
+    cursor: pointer;
+    @include flex;
+    flex-shrink: 0;
+    gap: 12px;
+    margin-bottom: 32px;
+    width: 100%;
+    padding-right: 120px;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &__tab-btn {
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 4px;
+    background-color: rgba($dark-green, 0.5);
+    color: white;
+    font-family: $font-alt;
+    font-weight: $medium;
+    font-size: 16px;
+    text-transform: capitalize;
+    flex-shrink: 0;
+    white-space: nowrap;
+    transition:
+      background-color 0.3s ease,
+      box-shadow 0.3s ease,
+      transform 0.1s ease;
+
+    &.is-active {
+      background-color: rgba($dark-green, 1);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    @media (hover: hover) {
+      &:not(.is-active):hover {
+        background-color: rgba($dark-green, 0.7);
+        box-shadow: inset 0 0 4px 0 $light-blue;
+      }
+    }
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+  }
+
+  &__slider {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    width: 100%;
+  }
+
+  &__track {
+    @include flex($justify: flex-start);
+    align-self: center;
+    gap: 24px;
+    height: 464px;
+    width: auto;
+    will-change: transform;
+    touch-action: pan-y;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+
+    @media screen and (max-height: $breakpoint-sm) {
+      height: 280px;
+    }
+  }
+
+  &__card {
+    color: $bg-main;
+    width: 280px;
+    height: 464px;
+    border: 1px solid $dark-blue;
+    background: linear-gradient(200deg, $light-blue 0%, white 100%);
+    border-radius: 5px;
+    box-shadow: 4px 4px 8px 0 $light-blue;
+    padding: 4px;
+    padding-bottom: 16px;
+    flex-shrink: 0;
+    overflow: hidden;
+    align-content: start;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 200px auto 1fr auto auto;
+    gap: 16px 16px;
+    grid-template-areas:
+      "img"
+      "title"
+      "text"
+      "price"
+      "btn";
+
+    @media screen and (max-height: $breakpoint-sm) {
+      width: 464px;
+      height: 280px;
+      grid-template-columns: 200px 1fr;
+      grid-template-rows: auto auto auto;
+      grid-template-areas:
+        "img title"
+        "img text"
+        "price btn";
+    }
+  }
+
+  &__card-image-wrap {
+    grid-area: img;
+    width: 100%;
+    height: 100%;
+    border: 1px solid white;
+    border-radius: 5px;
+
+    @media screen and (max-height: $breakpoint-sm) {
+      aspect-ratio: 1 / 1;
+      width: 200px;
+    }
+  }
+
+  &__card-image {
+    width: 100%;
+    border-radius: 5px;
+
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__card-title {
+    grid-area: title;
+    padding-inline: 4px;
+    font-family: $font-main;
+    font-size: 16px;
+    font-weight: $medium;
+    color: black;
+    line-height: 1.3;
+    max-height: calc(3 * 1.3em);
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    @media screen and (max-height: $breakpoint-sm) {
+      padding: 0;
+      margin: 8px 0 0 0;
+    }
+  }
+
+  &__card-text {
+    grid-area: text;
+    padding-inline: 4px;
+    font-weight: $light;
+    font-family: $font-main;
+    font-size: 14px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+    max-height: calc(4 * 1.3em);
+    @media screen and (max-height: $breakpoint-sm) {
+      padding: 0;
+      margin: 0 4px 0 0;
+      max-height: calc(6 * 1.3em);
+      -webkit-line-clamp: 6;
+    }
+  }
+
+  &__card-price {
+    grid-area: price;
+    padding-inline: 4px;
+    color: $dark-green;
+    font-weight: $bold;
+    text-align: center;
+    font-size: 16px;
+    text-transform: uppercase;
+    @media screen and (max-height: $breakpoint-sm) {
+      padding: 0;
+      margin: 0 8px 0 0;
+    }
+  }
+
+  &__card-more-btn {
+    grid-area: btn;
+    padding-inline: 4px;
+    color: $dark-blue;
+    font-weight: $medium;
+    font-size: 16px;
+    text-transform: lowercase;
+    box-shadow: 0 0 4px 1px $dark-blue;
+    border-radius: 2px;
+    padding: 2px 16px;
+    cursor: pointer;
+    width: fit-content;
+    margin: 0 auto;
+    letter-spacing: 0;
+    text-indent: 0;
+
+    transition:
+      letter-spacing 0.6s ease-in,
+      text-indent 0.6s ease-in,
+      transform 0.1s ease;
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        letter-spacing: 0.25em;
+        text-indent: 0.25em;
+      }
+    }
+  }
+}
+
+.services-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  background-color: transparent;
+  transition:
+    opacity 0.4s ease,
+    visibility 0.4s ease;
+
+  &.is-open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  &__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba($bg-main, 0.8);
+    box-shadow: inset 0 0 64px 0 $light-blue;
+    backdrop-filter: blur(8px);
+  }
+
+  &__body {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(95%, 768px);
+    height: 100%;
+    max-height: 620px;
+
+    background-color: transparent;
+    border-top: 2px solid rgba(white, 0.3);
+    border-bottom: 2px solid rgba(white, 0.3);
+    padding: 48px 24px 24px;
+    box-shadow: 0 0 4px 2px rgba($bg-main, 0.3);
+    backdrop-filter: blur(12px);
+
+    @include flex(column);
+
+    @media screen and (max-width: $breakpoint-sm),
+      screen and (max-height: $breakpoint-sm) {
+      padding: 48px 8px 32px;
+      height: 95vh;
+    }
+  }
+
+  &__close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 10;
+    width: 32px;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background: transparent;
+    border: 2px solid rgba(white, 0.1);
+    box-shadow: 0 0 3px 0 white;
+    cursor: pointer;
+    transition: box-shadow 0.6s linear;
+    @include flex($justify: center);
+    -webkit-tap-highlight-color: transparent;
+
+    &::before {
+      content: "";
+      width: 24px;
+      aspect-ratio: 1 / 1;
+      background-color: $light-blue;
+      mask-image: url("/src/assets/icons/close-icon.svg");
+      -webkit-mask-image: url("/src/assets/icons/close-icon.svg");
+      mask-position: center;
+      mask-repeat: no-repeat;
+      mask-size: contain;
+      transition: background-color 0.3s ease;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 48px;
+      height: 48px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        box-shadow: 0 0 32px 0 white;
+        &::before {
+          background-color: $cream;
+        }
+      }
+    }
+
+    &:active {
+      box-shadow: 0 0 15px 0 white;
+      &::before {
+        background-color: $cream;
+      }
+    }
+  }
+
+  &__content {
+    @include flex(column, $justify: flex-start);
+    width: 100%;
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: 12px;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: $cream;
+      border-radius: 4px;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+      background: $dark-green;
+    }
+  }
+
+  &__image {
+    border: 2px solid white;
+    width: 80%;
+    height: 420px;
+    object-fit: contain;
+    background-color: $cream;
+    margin-bottom: 32px;
+
+    @media screen and (max-height: $breakpoint-sm) {
+      height: 100%;
+    }
+  }
+
+  &__price {
+    font-size: 20px;
+    font-weight: $medium;
+    margin-bottom: 32px;
+  }
+
+  &__title {
+    font-size: 24px;
+    color: $text-light;
+    font-weight: $regular;
+    text-align: center;
+    margin-bottom: 48px;
+
+    @include media-max($breakpoint-sm) {
+      font-size: 20px;
+    }
+  }
+
+  &__text {
+    font-size: 16px;
+    font-weight: $light;
+    line-height: 2;
+    word-spacing: 0.3em;
+    margin-bottom: 48px;
+  }
+}
+
+.services-equalizer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 120px;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  padding: 0;
+
+  &__track {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    width: 100%;
+    height: 100%;
+  }
+
+  &-ray {
+    width: 32px;
+    flex-shrink: 0;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    transition: background-color 0.2s ease;
+    border: 1px solid rgba(grey, 0.2);
+    border-bottom: none;
+
+    &--cream {
+      background-color: rgba($cream, 0.2);
+    }
+    &--light-blue {
+      background-color: rgba($light-blue, 0.2);
+    }
+    &--light-green {
+      background-color: rgba($light-green, 0.2);
+    }
+    &--dark-green {
+      background-color: rgba($dark-green, 0.2);
+    }
+    &--dark-blue {
+      background-color: rgba($dark-blue, 0.2);
+    }
+  }
+}

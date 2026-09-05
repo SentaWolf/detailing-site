@@ -1,0 +1,116 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz@0,14..32;1,14..32&family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Russo+One&display=swap");
+
+// Colors
+$bg-main: #030303;
+$text-dark: #030303;
+$text-light: #ffffff;
+$cream: #ffeac5;
+$light-green: #a0b196;
+$dark-green: #687069;
+$light-blue: #e2e8f0;
+$dark-blue: #a0aec0;
+$yandex: #ff4433;
+$gis2: #19aa1e;
+
+// Fonts
+$font-decor: "Russo One", sans-serif;
+$font-main: "Montserrat", sans-serif;
+$font-alt: "Inter", sans-serif;
+$font-title-alt: "Montserrat Alternates", sans-serif;
+
+$thin: 100;
+$light: 300;
+$regular: 400;
+$medium: 500;
+$semi-bold: 600;
+$bold: 700;
+
+@mixin container-base {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@mixin flex(
+  $direction: row,
+  $wrap: nowrap,
+  $content: center,
+  $justify: space-between,
+  $align: center
+) {
+  display: flex;
+  flex-direction: $direction;
+  flex-wrap: $wrap;
+  align-content: $content;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+@mixin neon-line($color, $height, $duration: 2s) {
+  height: $height;
+  flex-shrink: 0;
+  --neon-color: #{$color};
+
+  box-shadow:
+    0 0 0 1px #ffffff,
+    0 0 10px 3px #ffffff,
+    0 0 20px 5px $color;
+
+  animation: neonPulse $duration ease-in-out infinite alternate;
+}
+
+$breakpoint-xxl: 1400px;
+$breakpoint-xl: 1200px;
+$breakpoint-lg: 992px;
+$breakpoint-md: 768px;
+$breakpoint-sm: 576px;
+
+@mixin media-max($size) {
+  @media (max-width: #{$size - 1px}) {
+    @content;
+  }
+}
+
+@mixin bubble-style(
+  $size,
+  $color,
+  $opacity,
+  $blur: 4px,
+  $thickness: 2px,
+  $bg: rgb(255, 255, 255, 0.3)
+) {
+  width: $size;
+  height: $size;
+  border-radius: 50%;
+  background-color: $bg;
+  border: $thickness solid rgba($color, $opacity);
+  backdrop-filter: blur($blur);
+  -webkit-backdrop-filter: blur($blur);
+  box-shadow: 0 0 16px 2px $bg;
+  filter: blur(2px);
+}
+
+@mixin beam-star-style(
+  $width: var(--beam-w, 4px),
+  $height: var(--beam-h, 100vh),
+  $blur: var(--beam-blur, 2px),
+  $rotate: var(--beam-rot, 0deg)
+) {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform-origin: center center;
+  transform: translate(-50%, -50%) rotate($rotate);
+  width: $width;
+  height: $height;
+  filter: blur($blur);
+
+  background: linear-gradient(
+    to bottom,
+    rgba($light-blue, 0) 0%,
+    rgba($dark-blue, 100) 60%,
+    rgba($light-blue, 0) 100%
+  );
+
+  will-change: transform, filter, width, height, opacity;
+}

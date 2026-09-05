@@ -1,0 +1,980 @@
+@use "../variables" as *;
+
+@property --mask-size {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 100%;
+}
+
+@property --mask-main {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+
+.advantages {
+  position: relative;
+  width: 100%;
+  height: min(100vh, 960px);
+  @include flex($justify: center);
+  padding: 160px 16px 120px 16px;
+  background-color: $bg-main;
+  background-image:
+    linear-gradient(rgba($bg-main, 0.3), rgba($bg-main, 0.3)),
+    url("/src/assets/images/advantages-bubles.jpg");
+  background-repeat: no-repeat;
+  background-position: top left;
+  background-size: auto min(100vh, 960px);
+  background-blend-mode: hard-light;
+  overflow: hidden;
+
+  @media screen and (max-height: 960px) {
+    height: 960px;
+  }
+  @include media-max($breakpoint-xl) {
+    height: auto;
+  }
+
+  &__container {
+    position: relative;
+    z-index: 2;
+    @include container-base;
+    height: min(100%, 680px);
+    @include flex($align: flex-start, $content: flex-start);
+    gap: 42px;
+    width: 100%;
+    will-change: transform;
+
+    @include media-max($breakpoint-xl) {
+      height: 100%;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 72px;
+    }
+
+    @media screen and (max-height: 680px) {
+      align-items: center;
+    }
+  }
+
+  &__static {
+    @include flex(column, $align: stretch);
+    height: 100%;
+    width: 36%;
+    flex-basis: 36%;
+    flex-shrink: 0;
+
+    @include media-max($breakpoint-xl) {
+      max-width: 695px;
+      width: 100%;
+      flex-basis: initial;
+      flex-shrink: initial;
+      gap: 48px;
+    }
+  }
+
+  &__greeting {
+    @include flex(column, $align: flex-start);
+    gap: 24px;
+    text-align: left;
+
+    @include media-max($breakpoint-md) {
+      gap: 16px;
+    }
+  }
+
+  &__heading {
+    position: relative;
+    z-index: 1;
+    font-size: 64px;
+    font-weight: $bold;
+    text-transform: uppercase;
+    color: white;
+
+    @include media-max($breakpoint-lg) {
+      font-size: 56px;
+    }
+    @include media-max($breakpoint-md) {
+      font-size: 48px;
+    }
+    @media screen and (max-width: 360px) {
+      font-size: 42px;
+    }
+
+    &::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      font-size: 64px;
+      font-weight: $bold;
+      color: transparent;
+      -webkit-text-stroke: 1px white;
+      text-stroke: 1px white;
+      transform: translate(-5px, 0);
+      z-index: -1;
+      pointer-events: none;
+
+      @include media-max($breakpoint-lg) {
+        font-size: 56px;
+      }
+      @include media-max($breakpoint-md) {
+        font-size: 48px;
+      }
+      @media screen and (max-width: 360px) {
+        font-size: 42px;
+      }
+    }
+  }
+
+  &__clue {
+    font-size: 20px;
+    font-weight: $semi-bold;
+
+    @include media-max($breakpoint-md) {
+      font-size: 18px;
+      font-weight: $medium;
+    }
+  }
+
+  .card-small {
+    position: relative;
+    width: 100%;
+    height: 208px;
+    padding: 16px;
+    border: 1px solid $cream;
+    border-radius: 25px;
+    overflow: hidden;
+    background-color: rgba($dark-blue, 0.3);
+    backdrop-filter: blur(4px) brightness(1.1);
+    -webkit-backdrop-filter: blur(4px) brightness(1.1);
+
+    @include media-max($breakpoint-md) {
+      padding: 8px;
+      padding-top: 16px;
+      border-radius: 16px;
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.12) 0%,
+        rgba(255, 255, 255, 0.02) 40%,
+        transparent 100%
+      );
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.3) 0%,
+        rgba(255, 255, 255, 0.05) 50%,
+        rgba(0, 0, 0, 0.4) 100%
+      );
+      -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    box-shadow:
+      0 4px 30px rgba(0, 0, 0, 0.4),
+      0 1px 1px rgba(0, 0, 0, 0.2);
+
+    &__outer {
+      @include flex(column);
+      height: 100%;
+      gap: 16px;
+    }
+
+    &__heading {
+      font-family: $font-title-alt;
+      font-size: 24px;
+      font-weight: $semi-bold;
+      color: $cream;
+      letter-spacing: 1px;
+
+      @media screen and (max-width: 418px) {
+        font-size: 20px;
+      }
+    }
+
+    &__inner {
+      display: grid;
+      grid-template-columns: 88px 1fr;
+      gap: 16px;
+      width: 100%;
+      height: 100%;
+      align-items: center;
+
+      @include media-max($breakpoint-md) {
+        grid-template-columns: 72px 1fr;
+        gap: 8px;
+      }
+
+      @media screen and (max-width: 418px) {
+        grid-template-columns: 64px 1fr;
+      }
+    }
+
+    &__icon {
+      width: 88px;
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.1);
+      background-image: url("/src/assets/icons/card-small-icon.svg");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+      flex-shrink: 0;
+
+      @include media-max($breakpoint-md) {
+        width: 72px;
+      }
+
+      @media screen and (max-width: 418px) {
+        width: 64px;
+      }
+    }
+
+    &__content {
+      @include flex(column, $justify: flex-start);
+      height: 100%;
+      width: 100%;
+      max-height: 129px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    &__track {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    &__slide {
+      @include flex();
+      width: 100%;
+      height: 129px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      background-color: rgba($bg-main, 0.5);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba($cream, 0.25);
+      border-radius: 8px;
+
+      -webkit-mask-image: radial-gradient(
+        circle,
+        transparent var(--mask-size),
+        black var(--mask-size)
+      );
+      mask-image: radial-gradient(
+        circle,
+        transparent var(--mask-size),
+        black var(--mask-size)
+      );
+
+      transition: none;
+
+      &.is-top {
+        z-index: 4;
+        opacity: 1;
+        visibility: visible;
+        --mask-size: 0%;
+        transition: none;
+      }
+
+      &.is-top-animate {
+        z-index: 4;
+        opacity: 1;
+        visibility: visible;
+        --mask-size: 100%;
+        transition: --mask-size 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+      }
+
+      &.is-top-reset {
+        z-index: 4;
+        opacity: 0;
+        visibility: hidden;
+        --mask-size: 100%;
+        transition: none;
+      }
+
+      &.is-hidden {
+        z-index: 1;
+        opacity: 0;
+        visibility: hidden;
+        --mask-size: 0%;
+        transition: none;
+      }
+
+      &.is-under {
+        z-index: 3;
+        opacity: 1;
+        visibility: visible;
+        --mask-size: 0%;
+        transition: none;
+      }
+
+      &.is-rising {
+        z-index: 2;
+        visibility: hidden;
+        --mask-size: 0%;
+        opacity: 0;
+        transition: none;
+      }
+
+      &.is-rising-animate {
+        z-index: 2;
+        visibility: visible;
+        --mask-size: 0%;
+        opacity: 1;
+        transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+      }
+    }
+
+    &__text {
+      font-size: 18px;
+      font-weight: $medium;
+      color: white;
+      line-height: 1.5;
+      width: 100%;
+      word-wrap: break-word;
+      word-break: break-word;
+      white-space: normal;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      -webkit-line-clamp: 4;
+      word-break: break-word;
+
+      @media screen and (max-width: 418px) {
+        font-size: 16px;
+      }
+    }
+  }
+
+  &__dinamic {
+    @include flex();
+    position: relative;
+    aspect-ratio: 695.92 / 680;
+    height: 100%;
+    width: auto;
+    flex-grow: 1;
+    flex-shrink: 1;
+
+    @include media-max($breakpoint-xl) {
+      width: 100%;
+      max-width: 695px;
+      flex-grow: initial;
+      flex-shrink: initial;
+    }
+
+    @media screen and (max-width: $breakpoint-md),
+      screen and (max-height: 680px) {
+      aspect-ratio: auto;
+      flex-direction: column;
+      height: 90vh;
+      width: 100%;
+
+      &::before {
+        display: none;
+      }
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      z-index: 1;
+      top: 50%;
+      right: -20%;
+      transform: translateY(-50%);
+      width: 72%;
+      height: 100%;
+      border-radius: 50%;
+      filter: blur(100px);
+      background: linear-gradient(to bottom, $dark-green 0%, $light-green 100%);
+      opacity: 0.8;
+      pointer-events: none;
+      animation: blurPulse 4s ease-in-out infinite alternate;
+    }
+  }
+
+  &__btn-show-more {
+    display: none;
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    z-index: 20;
+    aspect-ratio: 1 / 1;
+    width: 48px;
+    border: 1px solid rgba($bg-main, 0.5);
+    border-radius: 0 0 16px 0;
+    background-color: $light-blue;
+    cursor: pointer;
+    box-shadow: 0 0 8px 0 $light-blue;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 24px;
+      height: 24px;
+      background-color: $bg-main;
+      -webkit-mask-image: url("/src/assets/icons/show-more.svg");
+      mask-image: url("/src/assets/icons/show-more.svg");
+      mask-position: center;
+      mask-repeat: no-repeat;
+      mask-size: contain;
+      -webkit-mask-size: contain;
+      animation: iconMovePulse 2.5s ease-in-out infinite alternate;
+    }
+
+    @media screen and (max-width: $breakpoint-md),
+      screen and (max-height: 680px) {
+      display: block;
+      visibility: visible;
+      opacity: 1;
+    }
+
+    &.is-active {
+      background-color: $dark-green;
+      border-color: rgba(white, 0.5);
+
+      &::before {
+        background-color: white;
+        animation: iconMovePulse2 2.5s ease-in-out infinite alternate;
+      }
+    }
+  }
+
+  .card-main {
+    position: relative;
+    flex-basis: 48%;
+    flex-shrink: 0;
+    width: 48%;
+    height: 100%;
+    background: linear-gradient(135deg, $cream 0%, $light-blue 100%);
+    border: 1px solid $dark-green;
+    border-radius: 24px;
+
+    @media screen and (max-width: $breakpoint-md),
+      screen and (max-height: 680px) {
+      flex-basis: initial;
+      flex-shrink: initial;
+      width: 100%;
+      border-radius: 16px;
+    }
+
+    &__slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      padding: 16px;
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: 1fr 72% 48px;
+      gap: 12px;
+      align-items: center;
+
+      @media screen and (max-width: $breakpoint-md),
+        screen and (max-height: 680px) {
+        grid-template-rows: 1fr 72vh;
+        justify-items: center;
+        padding: 8px;
+        flex-basis: initial;
+        flex-shrink: initial;
+        border-radius: 16px;
+      }
+    }
+
+    &__heading {
+      grid-row: 1;
+      width: 100%;
+      margin: auto 0;
+      font-size: 20px;
+      color: $text-dark;
+      font-weight: $medium;
+      line-height: 1.3;
+      text-align: center;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      word-break: break-word;
+      opacity: 1;
+      -webkit-line-clamp: var(--heading-clamp, 3);
+      max-height: calc(
+        var(--heading-clamp, 3) * var(--heading-line-height, 1.3em)
+      );
+
+      line-height: var(--heading-line-height, 1.3em);
+    }
+
+    &__image {
+      grid-row: 2;
+      width: 100%;
+      height: 100%;
+      border: 1px solid rgba(white, 0.8);
+      object-fit: cover;
+      object-position: center center;
+      border-radius: 8px;
+      background-color: $bg-main;
+      -webkit-mask-image: none;
+      mask-image: none;
+      --mask-main: 0%;
+
+      &--pos-left {
+        object-position: left center;
+      }
+      &--pos-right {
+        object-position: right center;
+      }
+      &--pos-top {
+        object-position: center top;
+      }
+      &--pos-bottom {
+        object-position: center bottom;
+      }
+
+      @media screen and (max-width: $breakpoint-md),
+        screen and (max-height: 680px) {
+        border-radius: 16px;
+      }
+    }
+
+    &__nav {
+      @include flex;
+      gap: 48px;
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      z-index: 50;
+      transform: translateX(-50%);
+
+      @media screen and (max-width: $breakpoint-md),
+        screen and (max-height: 680px) {
+        display: none;
+        visibility: hidden;
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+    }
+
+    &__btn {
+      width: 48px;
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      background-color: $dark-green;
+      border: 1px solid $dark-blue;
+      @include flex;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 24px;
+      transition:
+        transform 0.2s ease,
+        box-shadow 0.3s ease;
+      cursor: pointer;
+
+      &.prev {
+        background-image: url("/src/assets/icons/arrow-prev.svg");
+      }
+      &.next {
+        background-image: url("/src/assets/icons/arrow-next.svg");
+      }
+
+      @media (hover: hover) {
+        &:hover {
+          transform: scale(1.05);
+          box-shadow: 0 0 16px 2px rgba($dark-blue, 0.5);
+        }
+      }
+      &:active {
+        transform: scale(0.95);
+      }
+    }
+  }
+
+  .card-desc {
+    position: relative;
+    z-index: 2;
+    height: 72%;
+    width: auto;
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow: hidden;
+
+    @media screen and (max-width: $breakpoint-md),
+      screen and (max-height: 680px) {
+      flex-basis: initial;
+      flex-shrink: initial;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 15;
+      border-radius: 16px;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition:
+        opacity 0.5s ease-in,
+        visibility 0.5s ease-in;
+
+      &.is-open {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+      }
+    }
+
+    &__slider {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: white;
+      border: 1px solid $dark-green;
+      border-radius: 0 24px 24px 0;
+      padding: 24px;
+      background-image:
+        url("/src/assets/images/bubles-top-left.png"),
+        url("/src/assets/images/bubles-bottom-right.png");
+      background-repeat: no-repeat, no-repeat;
+      background-size:
+        40% auto,
+        40% auto;
+      background-position:
+        -5% -5%,
+        105% 105%;
+      transition: none;
+
+      @media screen and (max-width: $breakpoint-md),
+        screen and (max-height: 680px) {
+        padding: 16px;
+        border-radius: 0 0 16px 16px;
+      }
+    }
+
+    &__content {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-rows: auto 24px;
+      align-content: start;
+      align-items: center;
+      align-content: space-between;
+      gap: 16px;
+    }
+
+    &__text {
+      grid-row: 1;
+      font-size: 16px;
+      font-weight: $regular;
+      line-height: 1.3;
+      letter-spacing: 2%;
+      word-spacing: 12%;
+      color: $text-dark;
+      position: relative;
+      transform: translateZ(1px);
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      word-break: break-word;
+      white-space: pre-line;
+      -webkit-line-clamp: var(--desc-clamp, 3);
+      max-height: calc(var(--desc-clamp, 3) * var(--desc-line-height, 1.3em));
+
+      line-height: var(--desc-line-height, 1.3em);
+
+      @media screen and (max-width: $breakpoint-md),
+        screen and (max-height: 680px) {
+        line-height: 1.5;
+        letter-spacing: 5%;
+        text-indent: 5%;
+      }
+    }
+
+    &__btn {
+      grid-row: 2;
+      color: $dark-green;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: $medium;
+      text-transform: lowercase;
+      background: transparent;
+      border: none;
+      padding: 0;
+      display: none;
+
+      &.is-visible {
+        display: inline-block;
+      }
+    }
+  }
+
+  &__bubbles-ambient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+
+    .ambient-bubble {
+      position: absolute;
+      left: -150px;
+      top: 0;
+      will-change: transform, opacity;
+
+      &--type-1 {
+        @include bubble-style(4px, $text-dark, 0.8, 2px, 1px);
+      }
+      &--type-2 {
+        @include bubble-style(8px, $text-light, 0.8, 4px);
+      }
+      &--type-3 {
+        @include bubble-style(12px, $cream, 0.8, 2px);
+      }
+      &--type-4 {
+        @include bubble-style(14px, $light-green, 0.6, 2px, 3px);
+      }
+      &--type-5 {
+        @include bubble-style(16px, $dark-green, 0.8, 4px, 3px);
+      }
+      &--type-6 {
+        @include bubble-style(24px, $light-blue, 0.6, 8px);
+      }
+      &--type-7 {
+        @include bubble-style(32px, $dark-blue, 0.8, 8px);
+      }
+    }
+  }
+}
+
+html.is-locked {
+  overflow: hidden;
+  touch-action: none;
+}
+
+.advantages-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  background-color: transparent;
+  transition:
+    opacity 0.4s ease,
+    visibility 0.4s ease;
+
+  &.is-open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  &__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba($bg-main, 0.8);
+    box-shadow: inset 0 0 64px 0 $light-blue;
+    backdrop-filter: blur(8px);
+  }
+
+  &__body {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(95%, 768px);
+    height: 100%;
+    max-height: 620px;
+
+    background-color: transparent;
+    border-top: 2px solid rgba(white, 0.3);
+    border-bottom: 2px solid rgba(white, 0.3);
+    padding: 48px 24px 24px;
+    box-shadow: 0 0 4px 2px rgba($bg-main, 0.3);
+    backdrop-filter: blur(12px);
+
+    @include flex(column);
+
+    @media screen and (max-width: $breakpoint-sm),
+      screen and (max-height: $breakpoint-sm) {
+      padding: 48px 8px 32px;
+      height: 95vh;
+    }
+  }
+
+  &__close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background: transparent;
+    border: 2px solid rgba(white, 0.1);
+    box-shadow: 0 0 3px 0 white;
+    cursor: pointer;
+    transition: box-shadow 0.6s linear;
+    @include flex($justify: center);
+    -webkit-tap-highlight-color: transparent;
+
+    &::before {
+      content: "";
+      width: 24px;
+      aspect-ratio: 1 / 1;
+      background-color: $light-blue;
+      mask-image: url("/src/assets/icons/close-icon.svg");
+      -webkit-mask-image: url("/src/assets/icons/close-icon.svg");
+      mask-position: center;
+      mask-repeat: no-repeat;
+      mask-size: contain;
+      transition: background-color 0.3s ease;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 48px;
+      height: 48px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        box-shadow: 0 0 32px 0 white;
+        &::before {
+          background-color: $cream;
+        }
+      }
+    }
+
+    &:active {
+      box-shadow: 0 0 15px 0 white;
+      &::before {
+        background-color: $cream;
+      }
+    }
+  }
+
+  &__content {
+    @include flex(column, $justify: flex-start);
+    width: 100%;
+    gap: 48px;
+    text-align: center;
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: 12px;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: $cream;
+      border-radius: 4px;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+      background: $dark-green;
+    }
+  }
+
+  &__title {
+    font-size: 24px;
+    color: $text-light;
+    font-weight: $medium;
+
+    @include media-max($breakpoint-sm) {
+      font-size: 20px;
+    }
+  }
+
+  &__text {
+    text-align: left;
+    font-size: 16px;
+    line-height: 200%;
+    color: $text-light;
+    white-space: pre-line;
+    letter-spacing: 2%;
+    word-spacing: 12%;
+  }
+}
+
+@keyframes blurPulse {
+  0%,
+  100% {
+    filter: blur(100px);
+    transform: translateY(-50%) scale(1);
+  }
+  50% {
+    filter: blur(50px);
+    transform: translateY(-50%) scale(1.05);
+  }
+}
+
+@keyframes iconMovePulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    transform: translate(-55%, -55%) scale(1.15);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes iconMovePulse2 {
+  0% {
+    transform: translate(-50%, -50%) rotate(180deg) scale(1);
+  }
+  50% {
+    transform: translate(-45%, -45%) rotate(180deg) scale(1.15);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(180deg) scale(1);
+  }
+}

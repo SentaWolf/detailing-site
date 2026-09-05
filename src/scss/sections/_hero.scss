@@ -1,0 +1,657 @@
+@use "../variables" as *;
+
+.hero {
+  position: relative;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 576px;
+  width: 100%;
+  overflow: hidden;
+  z-index: 1;
+
+  .parallax-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    &.layer-bg {
+      z-index: 2;
+      @include flex(column, $justify: flex-end);
+      background: linear-gradient(to bottom, #848676, $bg-main);
+
+      .layer-bg__img {
+        z-index: 3;
+        @include container-base;
+        background-image: url("/src/assets/images/car.jpg");
+        height: 100%;
+        background-repeat: no-repeat;
+        background-position: center bottom;
+        background-size: cover;
+
+        mask-image:
+          linear-gradient(
+            to right,
+            transparent 0%,
+            black 15%,
+            black 85%,
+            transparent 100%
+          ),
+          linear-gradient(
+            to top,
+            transparent 0%,
+            black 0%,
+            black 60%,
+            transparent 100%
+          );
+
+        mask-composite: intersect;
+        -webkit-mask-composite: destination-in;
+
+        transition: filter 0.6s cubic-bezier(0.25, 0.01, 1, 1);
+
+        @include media-max($breakpoint-xl) {
+          mask-image: linear-gradient(to bottom, transparent 0%, black 35%);
+          -webkit-mask-composite: source-over;
+        }
+
+        @include media-max($breakpoint-md) {
+          height: auto;
+          aspect-ratio: 1200 / 960;
+          background-size: 130% auto;
+        }
+      }
+
+      &.is-blurred {
+        .layer-bg__img {
+          filter: blur(8px) brightness(0.8);
+        }
+      }
+
+      .layer-bg__beams {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 4;
+        pointer-events: none;
+        background-image: url("/src/assets/images/beams.png");
+        background-repeat: no-repeat;
+        background-position: center top;
+        background-size: 100% 85%;
+        opacity: 0;
+        animation: autoHeadlightFlicker 6s ease-in-out infinite;
+        transition: opacity 0.4s ease;
+
+        @include media-max($breakpoint-xl) {
+          background-size: 130% 85%;
+        }
+
+        @include media-max($breakpoint-lg) {
+          top: 15%;
+          background-size: 140% 80%;
+        }
+
+        @include media-max($breakpoint-md) {
+          top: 10%;
+          background-size: 150% 85%;
+        }
+
+        @include media-max($breakpoint-sm) {
+          top: 30%;
+          background-size: 200% 65%;
+        }
+      }
+
+      .hero__bg-sparks {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        pointer-events: none;
+        z-index: 5;
+        display: none;
+
+        @media (hover: hover) {
+          display: block;
+        }
+      }
+
+      .bg-spark {
+        position: absolute;
+        top: 20%;
+        border-radius: 50%;
+        z-index: 100;
+        background-color: white;
+        box-shadow:
+          0 0 10px 3px $light-blue,
+          0 0 20px 6px rgba($light-blue, 0.6);
+
+        opacity: 0;
+        animation: flySparks 7s linear infinite;
+
+        @media (hover: hover) {
+          &:nth-child(1) {
+            left: 8%;
+            width: 5px;
+            height: 5px;
+            animation-duration: 8s;
+            animation-delay: 0s;
+          }
+          &:nth-child(2) {
+            left: 23%;
+            width: 4px;
+            height: 4px;
+            animation-duration: 6s;
+            animation-delay: 2s;
+            box-shadow:
+              0 0 10px 3px $cream,
+              0 0 20px 6px rgba($cream, 0.5);
+          }
+          &:nth-child(3) {
+            left: 38%;
+            width: 6px;
+            height: 6px;
+            animation-duration: 9s;
+            animation-delay: 0.5s;
+          }
+          &:nth-child(4) {
+            left: 52%;
+            width: 3px;
+            height: 3px;
+            animation-duration: 5s;
+            animation-delay: 3.5s;
+            box-shadow:
+              0 0 10px 3px $cream,
+              0 0 20px 6px rgba($cream, 0.5);
+          }
+          &:nth-child(5) {
+            left: 67%;
+            width: 5px;
+            height: 5px;
+            animation-duration: 7.5s;
+            animation-delay: 1s;
+          }
+          &:nth-child(6) {
+            left: 78%;
+            width: 4px;
+            height: 4px;
+            animation-duration: 6.5s;
+            animation-delay: 2.5s;
+            box-shadow:
+              0 0 10px 3px $cream,
+              0 0 20px 6px rgba($cream, 0.5);
+          }
+          &:nth-child(7) {
+            left: 87%;
+            width: 7px;
+            height: 7px;
+            animation-duration: 10s;
+            animation-delay: 4.5s;
+          }
+          &:nth-child(8) {
+            left: 94%;
+            width: 4px;
+            height: 4px;
+            animation-duration: 7s;
+            animation-delay: 1.8s;
+            box-shadow:
+              0 0 10px 3px $cream,
+              0 0 20px 6px rgba($cream, 0.5);
+          }
+        }
+      }
+    }
+
+    &.layer-lines {
+      z-index: 3;
+      @include flex($align: flex-start);
+      width: 50%;
+      pointer-events: none;
+      gap: 48px;
+      padding-left: 48px;
+
+      @include media-max($breakpoint-md) {
+        padding-left: 24px;
+      }
+
+      .line {
+        width: 0;
+        background-color: #ffffff;
+      }
+
+      .line-1 {
+        @include neon-line($light-green, 65%, 1.8s);
+      }
+      .line-2 {
+        @include neon-line($light-green, 45%, 2.4s);
+      }
+      .line-3 {
+        @include neon-line($light-green, 55%);
+      }
+      .line-4 {
+        @include neon-line($light-green, 35%, 1.4s);
+      }
+      .line-5 {
+        @include neon-line($light-green, 45%, 1.2s);
+      }
+      .line-6 {
+        @include neon-line($light-green, 25%, 1.6s);
+      }
+    }
+
+    &.layer-main {
+      z-index: 4;
+      pointer-events: none;
+      transform-style: preserve-3d;
+      perspective: 500px;
+
+      .hero__car {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr;
+        align-items: end;
+        @include container-base;
+        position: relative;
+        height: 100%;
+        transform-style: preserve-3d;
+
+        @media (hover: hover) {
+          &.is-hovered {
+            .car-body {
+              transform: translateZ(24px) translateX(24px) translateY(12px);
+              filter: contrast(1.2) drop-shadow(0 0 24px rgba($light-blue, 0.6));
+            }
+
+            .car-lights {
+              animation-play-state: paused;
+              animation: none;
+              opacity: 0.8;
+              filter: brightness(1.8)
+                drop-shadow(0 0 32px rgba(0, 210, 255, 0.8));
+              transform: translateZ(24px) translateX(24px) translateY(12px);
+            }
+          }
+        }
+      }
+
+      .car-trigger {
+        position: absolute;
+        bottom: 20%;
+        left: 50%;
+        width: 60%;
+        height: 30%;
+        border-radius: 170% 210% 100% 100%;
+        pointer-events: auto;
+        transform: translateX(-50%) translateZ(100px);
+        transform-style: preserve-3d;
+        z-index: 10;
+        background-color: rgba(#848676, 0);
+      }
+
+      .car-body {
+        pointer-events: none;
+        position: relative;
+        z-index: 1;
+        background-image: url("/src/assets/images/car-body.png");
+        height: 100%;
+        width: 100%;
+        background-repeat: no-repeat;
+        background-position: center bottom;
+        background-size: cover;
+
+        grid-column: 1 / 2;
+        grid-row: 1 / 2;
+
+        transition:
+          transform 0.6s cubic-bezier(0.25, 0.01, 1, 1),
+          filter 0.5s ease-in-out;
+
+        @include media-max($breakpoint-md) {
+          height: auto;
+          aspect-ratio: 1200 / 960;
+          background-size: 130% auto;
+        }
+      }
+
+      .car-lights {
+        pointer-events: none;
+        position: relative;
+        z-index: 2;
+        background-image: url("/src/assets/images/car-lights.png");
+        height: 100%;
+        width: 100%;
+        background-repeat: no-repeat;
+        background-position: center bottom;
+        background-size: cover;
+        grid-column: 1 / 2;
+        grid-row: 1 / 2;
+        @include media-max($breakpoint-md) {
+          height: auto;
+          aspect-ratio: 1200 / 960;
+          background-size: 130% auto;
+        }
+
+        animation: autoHeadlightFlicker 6s ease-in-out infinite;
+
+        transition:
+          opacity 0.4s ease,
+          filter 0.4s ease,
+          transform 0.6s cubic-bezier(0.25, 0.01, 1, 1);
+      }
+
+      @include media-max($breakpoint-md) {
+        .car-trigger {
+          pointer-events: none;
+        }
+
+        .car-body {
+          transform: none !important;
+        }
+
+        .car-lights {
+          animation: autoHeadlightFlicker 6s ease-in-out infinite !important;
+          filter: none !important;
+        }
+      }
+    }
+
+    &.layer-front {
+      z-index: 5;
+      pointer-events: none;
+      transform-style: preserve-3d;
+      transform: translateZ(50px);
+
+      .hero__content {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: auto;
+        top: 20%;
+        padding: 64px 0;
+        border-top: 2px solid rgba(255, 255, 255, 0.1);
+        border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(2px);
+
+        @include media-max($breakpoint-lg) {
+          padding: 56px 0;
+        }
+        @include media-max($breakpoint-md) {
+          padding: 48px 0;
+        }
+        @include media-max($breakpoint-md) {
+          padding: 40px 0;
+        }
+      }
+
+      .hero__content-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+
+        background: linear-gradient(
+          to right,
+          rgba(0, 0, 0, 0.2) 0%,
+          rgba(0, 0, 0, 0.5) 50%,
+          transparent 80%
+        );
+      }
+
+      .hero__text {
+        @include container-base;
+        @include flex(column);
+        text-align: center;
+        gap: 16px;
+        padding: 0 16px;
+        position: relative;
+        z-index: 2;
+      }
+
+      .hero__heading {
+        position: relative;
+        z-index: 1;
+        font-family: $font-decor;
+        font-size: 64px;
+        font-weight: $regular;
+        color: white;
+
+        @include media-max($breakpoint-lg) {
+          font-size: 56px;
+        }
+        @include media-max($breakpoint-md) {
+          font-size: 48px;
+        }
+
+        &::after {
+          content: attr(data-text);
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          font-family: $font-decor;
+          font-size: 64px;
+          font-weight: $regular;
+          color: transparent;
+          -webkit-text-stroke: 1px white;
+          text-stroke: 1px white;
+          transform: translate(0, 4px);
+          z-index: -1;
+          pointer-events: none;
+
+          @include media-max($breakpoint-lg) {
+            font-size: 56px;
+          }
+          @include media-max($breakpoint-md) {
+            font-size: 48px;
+          }
+        }
+      }
+
+      .hero__slogan {
+        font-size: 24px;
+        color: $cream;
+        text-transform: uppercase;
+        font-weight: $medium;
+        @include media-max($breakpoint-lg) {
+          font-size: 20px;
+        }
+        @include media-max($breakpoint-md) {
+          font-size: 16px;
+        }
+      }
+
+      .hero__subheading {
+        font-size: 24px;
+        font-weight: $semi-bold;
+        color: rgba(white, 0.8);
+        @include media-max($breakpoint-lg) {
+          font-size: 20px;
+        }
+        @include media-max($breakpoint-md) {
+          font-size: 16px;
+        }
+      }
+
+      .hero__block-btn {
+        position: absolute;
+        @include flex(column);
+        left: 0;
+        bottom: 15%;
+        width: 100%;
+        height: auto;
+        padding: 0 16px;
+        z-index: 10;
+        pointer-events: auto;
+
+        @include media-max($breakpoint-md) {
+          bottom: 10%;
+        }
+
+        .hero__btn {
+          @include flex();
+          pointer-events: auto;
+          gap: 16px;
+          padding: 24px 16px;
+          color: $cream;
+          font-weight: $regular;
+          font-size: 24px;
+          border: 2px solid $light-green;
+          border-radius: 8px;
+          backdrop-filter: blur(8px);
+          background-color: transparent;
+          box-shadow:
+            inset 0 0 32px 0 $light-green,
+            0 0 15px 0 rgba($light-green, 0.2);
+          cursor: pointer;
+
+          transition:
+            background-color 0.3s ease-in-out,
+            box-shadow 0.3s ease-in-out,
+            transform 0.2s ease;
+
+          @include media-max($breakpoint-sm) {
+            gap: 8px;
+            padding: 20px 12px;
+            font-size: 20px;
+          }
+
+          .btn-arrow {
+            display: inline-block;
+            aspect-ratio: 16 / 19;
+            height: 24px;
+            flex-shrink: 0;
+            background-image: url("/src/assets/icons/arrow-down.svg");
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: contain;
+
+            animation: arrowBounce 1.6s ease-in-out infinite;
+            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+
+            @include media-max($breakpoint-md) {
+              height: 20px;
+            }
+          }
+
+          @media (hover: hover) {
+            &:hover {
+              background-color: rgba(#848676, 0.6);
+              box-shadow:
+                inset 0 0 48px 0 $light-green,
+                0 0 25px 4px rgba($light-green, 0.6);
+              transform: translateY(-4px);
+
+              .btn-arrow {
+                animation: none;
+                transform: translateY(5px) scale(1.2);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@keyframes neonPulse {
+  0% {
+    box-shadow:
+      0 0 0 1px #ffffff,
+      0 0 10px 3px #ffffff,
+      0 0 20px 5px var(--neon-color);
+  }
+  100% {
+    box-shadow:
+      0 0 0 1px #ffffff,
+      0 0 14px 4px #ffffff,
+      0 0 35px 12px var(--neon-color);
+  }
+}
+
+@keyframes autoHeadlightFlicker {
+  0%,
+  80%,
+  100% {
+    opacity: 0;
+  }
+  83% {
+    opacity: 0.8;
+  }
+  85% {
+    opacity: 0.1;
+  }
+  87% {
+    opacity: 0.9;
+  }
+  89% {
+    opacity: 0.3;
+  }
+  92%,
+  96% {
+    opacity: 1;
+  }
+}
+
+@keyframes arrowBounce {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(4px) scale(1.15);
+  }
+}
+
+@keyframes flySparks {
+  0% {
+    transform: translateY(110vh) translateX(0) scale(0.5);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(50vh) translateX(30px) scale(1.1);
+  }
+  85% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-10vh) translateX(-20px) scale(0.4);
+    opacity: 0;
+  }
+}
+
+@keyframes autoTopLightsFlicker {
+  0%,
+  80%,
+  100% {
+    opacity: 0;
+    filter: blur(4px);
+  }
+  83% {
+    opacity: 0.4;
+  }
+  85% {
+    opacity: 0.1;
+  }
+  87% {
+    opacity: 0.6;
+  }
+  89% {
+    opacity: 0.2;
+  }
+  92%,
+  96% {
+    opacity: 0.7;
+    filter: blur(2px);
+  }
+}

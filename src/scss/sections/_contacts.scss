@@ -1,0 +1,526 @@
+@use "../variables" as *;
+
+.contacts {
+  overflow-x: hidden;
+  position: relative;
+  width: 100%;
+  height: auto;
+  @include flex($justify: center, $align: stretch);
+  padding: 120px 16px 64px 16px;
+  background-color: $bg-main;
+  overflow: hidden;
+
+  &__layer-lines {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    @include flex($align: flex-start);
+    width: 50%;
+    pointer-events: none;
+    gap: 48px;
+    padding-right: 48px;
+
+    @include media-max($breakpoint-md) {
+      padding-right: 24px;
+    }
+
+    .line {
+      width: 0;
+      background-color: #ffffff;
+    }
+
+    .line-1 {
+      @include neon-line($light-green, 65%, 1.8s);
+    }
+    .line-2 {
+      @include neon-line($light-green, 45%, 2.4s);
+    }
+    .line-3 {
+      @include neon-line($light-green, 55%);
+    }
+    .line-4 {
+      @include neon-line($light-green, 35%, 1.4s);
+    }
+    .line-5 {
+      @include neon-line($light-green, 45%, 1.2s);
+    }
+    .line-6 {
+      @include neon-line($light-green, 25%, 1.6s);
+    }
+  }
+
+  &__overlay {
+    z-index: 3;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    &::before {
+      content: "";
+      position: absolute;
+      z-index: 1;
+      bottom: 20%;
+      left: 0;
+      transform: translateY(20%);
+      width: 100%;
+      height: 60%;
+      filter: blur(50px);
+      background: rgba($dark-green, 0.4);
+      pointer-events: none;
+    }
+  }
+
+  &__container {
+    z-index: 5;
+    gap: 32px;
+    position: relative;
+    @include container-base;
+    @include flex($justify: flex-start, $align: flex-start);
+
+    @include media-max($breakpoint-lg) {
+      flex-direction: column;
+      gap: 0;
+      align-items: center;
+      text-align: center;
+    }
+  }
+
+  &__form-block {
+    flex-basis: 50%;
+    backdrop-filter: blur(6px);
+    border-radius: 8px;
+    flex-shrink: 0;
+    border: 1px solid rgba($light-blue, 0.2);
+    padding: 16px;
+    box-shadow: 8px -8px 12px 2px rgba($light-blue, 0.5);
+    @include flex(column, $align: flex-start);
+    gap: 24px;
+    @include media-max($breakpoint-lg) {
+      align-items: center;
+      padding: 16px 8px;
+    }
+  }
+
+  &__title {
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    white-space: normal;
+
+    &-front {
+      grid-column: 1;
+      grid-row: 1;
+      position: relative;
+      z-index: 2;
+      font-size: 48px;
+      font-weight: $bold;
+      color: white;
+
+      @media screen and (max-width: $breakpoint-md) {
+        font-size: 42px;
+      }
+    }
+
+    &-back {
+      grid-column: 1;
+      grid-row: 1;
+      position: relative;
+      z-index: 1;
+      font-size: 48px;
+      font-weight: $bold;
+      color: transparent;
+      -webkit-text-stroke: 1px white;
+      text-stroke: 1px white;
+      transform: translate(-5px, 0);
+      margin-right: -5px;
+      pointer-events: none;
+
+      @media screen and (max-width: $breakpoint-md) {
+        font-size: 42px;
+      }
+    }
+    @include media-max($breakpoint-lg) {
+      text-align: left;
+    }
+  }
+
+  &__text {
+    font-size: 16px;
+    font-weight: $regular;
+    @include media-max($breakpoint-lg) {
+      text-align: right;
+    }
+  }
+
+  &__form {
+    @include flex(column, $align: flex-start);
+    width: 320px;
+    height: fit-content;
+    gap: 32px;
+    @include media-max($breakpoint-lg) {
+      width: 100%;
+      max-width: 432px;
+    }
+  }
+
+  &__input-group {
+    @include flex(column, $align: flex-start);
+    gap: 12px;
+    width: 100%;
+  }
+
+  &__label {
+    color: $cream;
+    font-weight: $semi-bold;
+    font-size: 16px;
+  }
+
+  &__input {
+    width: 100%;
+    border-radius: 5px;
+    box-sizing: border-box;
+    outline: none;
+    appearance: none;
+    background-color: white;
+    padding: 8px 16px;
+    font-family: inherit;
+    font-size: 16px;
+    color: $bg-main;
+    font-weight: $regular;
+    caret-color: $cream;
+    border: 1px solid $light-blue;
+    transition:
+      border-color 0.1s ease-in,
+      box-shadow 0.1s ease-in;
+
+    &::placeholder {
+      font-family: $font-alt;
+      font-size: 14px;
+      color: $dark-blue;
+    }
+
+    &:hover,
+    &:focus {
+      border-color: $cream;
+    }
+
+    &:hover {
+      box-shadow: inset 0 -4px 4px 0 $cream;
+    }
+
+    &:invalid {
+      border-color: #ffb7b7;
+      box-shadow: inset 0 -4px 4px 0 #ffb7b7;
+
+      &:focus {
+        box-shadow:
+          inset 0 -4px 4px 0 #ffb7b7,
+          0 0 12px 2px #ffb7b7;
+      }
+    }
+
+    &:valid {
+      box-shadow: inset 0 -4px 4px 0 $light-green;
+
+      &:focus {
+        box-shadow:
+          inset 0 -4px 4px 0 $light-green,
+          0 0 12px 2px $light-green;
+      }
+    }
+
+    &:focus {
+      &:not(:invalid):not(:valid) {
+        box-shadow: 0 0 12px 2px $light-blue;
+      }
+    }
+  }
+
+  &__submit-btn {
+    cursor: pointer;
+    padding: 12px;
+    border-radius: 5px;
+    color: black;
+    font-size: 20;
+    font-weight: $regular;
+    text-transform: uppercase;
+    background-color: $cream;
+    box-shadow: inset 0 0 12px 6px $bg-main;
+    text-align: center;
+    width: 100%;
+    border: 1px solid $cream;
+    letter-spacing: 0;
+    text-indent: 0;
+
+    transition:
+      box-shadow 0.6s ease-in,
+      letter-spacing 0.6s ease-in,
+      text-indent 0.6s ease-in,
+      transform 0.1s ease;
+
+    @media (hover: hover) {
+      &:hover {
+        letter-spacing: 0.25em;
+        text-indent: 0.25em;
+        box-shadow: inset 0 0 12px 3px $bg-main;
+      }
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  &__info-block {
+    padding-bottom: 16px;
+    flex-grow: 1;
+    height: 100%;
+    color: white;
+    font-family: $font-alt;
+    font-size: 20px;
+    font-weight: $medium;
+    border-bottom: 1px solid rgba($light-blue, 0.5);
+    @include flex(column, $align: flex-start);
+    gap: 24px;
+    @include media-max($breakpoint-lg) {
+      align-items: center;
+      padding-bottom: 20px;
+    }
+  }
+
+  &__schedule {
+    margin-top: 82px;
+  }
+
+  &__schedule-label {
+    color: $light-green;
+  }
+
+  &__phone {
+  }
+
+  &__socials {
+    margin: auto 0 0 0;
+    @include flex;
+    gap: 16px;
+    @include media-max($breakpoint-lg) {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  }
+
+  &__social-link {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border: 2px solid rgba($light-blue, 0);
+    transition:
+      border-color 0.3s ease-in,
+      background-color 0.3s ease-in,
+      transform 0.1s ease-in;
+
+    &.light-green {
+      background-color: rgba($light-green, 0.6);
+      @media (hover: hover) {
+        &:hover {
+          background-color: rgba($light-green, 1);
+        }
+      }
+    }
+
+    &.dark-green {
+      background-color: rgba($dark-green, 0.6);
+
+      @media (hover: hover) {
+        &:hover {
+          background-color: rgba($dark-green, 1);
+        }
+      }
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        transform: scale(1.05);
+        border: 2px solid rgba($light-blue, 0.2);
+      }
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  &__social-icon {
+    display: block;
+
+    &--tg,
+    &--vk {
+      path {
+        fill: none;
+        stroke: white;
+        stroke-width: 2px;
+        transition:
+          stroke 0.3s ease-in,
+          stroke-width 0.3s ease;
+      }
+
+      .contacts__social-link:hover & {
+        path {
+          stroke: $bg-main;
+          stroke-width: 2.5px;
+        }
+      }
+    }
+
+    &--max,
+    &--wa,
+    &--ymaps {
+      path {
+        fill: white;
+        stroke: none;
+        transition: fill 0.3s ease-in;
+      }
+
+      .contacts__social-link:hover & {
+        path {
+          fill: $bg-main;
+        }
+      }
+    }
+  }
+}
+
+.contacts-equalizer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 120px;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-start;
+  padding: 0;
+
+  &__track {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    width: 100%;
+    height: 100%;
+  }
+
+  &-ray {
+    width: 32px;
+    flex-shrink: 0;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    transition: background-color 0.2s ease;
+    border: 1px solid rgba(grey, 0.2);
+    border-bottom: none;
+
+    &--cream {
+      background-color: rgba($cream, 0.2);
+    }
+    &--light-blue {
+      background-color: rgba($light-blue, 0.2);
+    }
+    &--light-green {
+      background-color: rgba($light-green, 0.2);
+    }
+    &--dark-green {
+      background-color: rgba($dark-green, 0.2);
+    }
+    &--dark-blue {
+      background-color: rgba($dark-blue, 0.2);
+    }
+  }
+}
+
+.contacts-map {
+  background-color: $bg-main;
+  width: 100%;
+  padding-top: 64px;
+
+  &__map {
+    width: 100%;
+    height: 420px;
+    border-top: 1px solid rgba($dark-green, 0.3);
+    border-bottom: 1px solid rgba($dark-green, 0.3);
+    background-color: $bg-main;
+    position: relative;
+    overflow: hidden;
+  }
+
+  &__address {
+    @include container-base;
+    padding-inline: 16px;
+    font-size: 20px;
+    font-weight: $medium;
+    color: white;
+    text-align: right;
+    font-style: normal;
+    margin-bottom: 16px;
+
+    a {
+      text-decoration: underline;
+      text-decoration-color: transparent;
+      text-decoration-thickness: 1px;
+      transition: text-decoration-color 0.3s ease-in;
+
+      @media (hover: hover) {
+        &:hover {
+          text-decoration-color: white;
+        }
+      }
+    }
+  }
+}
+
+.footer {
+  width: 100%;
+  padding: 32px 16px 64px 16px;
+  border-bottom: 4px solid $dark-green;
+  &__container {
+    @include container-base;
+    color: $dark-green;
+    font-size: 14px;
+    font-family: $font-alt;
+    font-weight: $regular;
+    @include flex;
+
+    @include media-max($breakpoint-lg) {
+      flex-direction: column;
+      gap: 16px;
+    }
+  }
+
+  a {
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    transition: text-decoration-color 0.3s ease-in;
+
+    @media (hover: hover) {
+      &:hover {
+        text-decoration-color: $dark-green;
+      }
+    }
+  }
+
+  &__copy {
+  }
+  &__policy {
+  }
+  &__developer {
+  }
+}

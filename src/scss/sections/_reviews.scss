@@ -1,0 +1,628 @@
+@use "../variables" as *;
+
+.reviews {
+  overflow-x: hidden;
+  position: relative;
+  width: 100%;
+  height: auto;
+  min-height: 100vh;
+  @include flex($justify: center, $align: stretch);
+  padding: 120px 16px;
+  background-color: $bg-main;
+  background-image: url("/src/assets/images/waterDrops.png");
+  background-position: top left;
+  background-repeat: repeat;
+  background-size: auto;
+  overflow: hidden;
+
+  &__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(
+      rgba($bg-main, 0.3) 0%,
+      rgba($bg-main, 0.3) 100%
+    );
+
+    &::before {
+      content: "";
+      position: absolute;
+      z-index: 1;
+      bottom: 50%;
+      left: 0;
+      transform: translateY(50%);
+      width: 100%;
+      height: 45%;
+      filter: blur(50px);
+      background: rgba($dark-green, 0.5);
+      pointer-events: none;
+    }
+  }
+
+  &__container {
+    position: relative;
+    @include flex(column);
+    @include container-base;
+  }
+
+  &__header {
+    z-index: 100;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 48px;
+
+    @include media-max($breakpoint-md) {
+      text-align: center;
+    }
+  }
+
+  &__title {
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    white-space: normal;
+
+    &-front {
+      grid-column: 1;
+      grid-row: 1;
+      position: relative;
+      z-index: 2;
+      font-size: 48px;
+      font-weight: $bold;
+      text-transform: uppercase;
+      color: white;
+
+      @media screen and (max-width: $breakpoint-md) {
+        font-size: 42px;
+      }
+      @media screen and (max-width: 360px) {
+        font-size: 32px;
+      }
+    }
+
+    &-back {
+      grid-column: 1;
+      grid-row: 1;
+      position: relative;
+      z-index: 1;
+      font-size: 48px;
+      font-weight: $bold;
+      text-transform: uppercase;
+      color: transparent;
+      -webkit-text-stroke: 1px white;
+      text-stroke: 1px white;
+      transform: translate(-5px, 0);
+      margin-right: -5px;
+      pointer-events: none;
+
+      @media screen and (max-width: $breakpoint-md) {
+        font-size: 42px;
+      }
+      @media screen and (max-width: 360px) {
+        font-size: 32px;
+      }
+    }
+  }
+
+  &__sub {
+    font-size: 32px;
+    font-weight: $medium;
+    white-space: nowrap;
+    @include media-max($breakpoint-md) {
+      font-size: 28px;
+    }
+
+    @include media-max($breakpoint-sm) {
+      font-size: 24px;
+    }
+  }
+
+  &__slider {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+  }
+
+  &__track {
+    @include flex($justify: flex-start);
+    align-self: center;
+    gap: 24px;
+    height: auto;
+    min-height: 320px;
+    width: auto;
+    will-change: transform;
+    touch-action: pan-y;
+    @include media-max($breakpoint-md) {
+      min-height: 376px;
+    }
+  }
+
+  &__nav {
+    z-index: 100;
+    align-self: center;
+    margin: 24px auto 48px auto;
+    width: fit-content;
+    @include flex();
+    gap: 64px;
+    background: transparent;
+  }
+
+  &__arrow-btn {
+    @include flex();
+    height: 24px;
+    width: 156px;
+    // aspect-ratio: 6.5 / 1;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+
+    &.is-disabled {
+      opacity: 0.8;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    @include media-max($breakpoint-sm) {
+      height: 32px;
+      width: 96px;
+    }
+  }
+
+  &__arrow-svg {
+    display: block;
+  }
+
+  &__card {
+    color: $bg-main;
+    width: 376px;
+    height: 320px;
+    border: 1px solid rgba($dark-blue, 0.5);
+    background: white;
+    border-radius: 25px;
+    box-shadow:
+      inset 4px 4px 24px 0 $dark-blue,
+      8px 8px 8px 0 rgba(black, 0.3);
+    padding: 24px;
+    flex-shrink: 0;
+    overflow: hidden;
+    align-content: space-between;
+    display: grid;
+    grid-template-columns: 184px auto;
+    grid-template-rows: auto 28px 1fr auto;
+    gap: 8px 8px;
+    grid-template-areas:
+      "name name"
+      "stars date"
+      "text text"
+      "btn btn";
+    align-content: start;
+    align-items: center;
+
+    @include media-max($breakpoint-md) {
+      grid-template-columns: auto;
+      grid-template-rows: 24px auto 28px 1fr auto;
+
+      grid-template-areas:
+        "date"
+        "name"
+        "stars"
+        "text"
+        "btn";
+      padding: 24px 8px;
+      width: 288px;
+      height: 376px;
+    }
+  }
+
+  &__card-name {
+    grid-area: name;
+    font-style: normal;
+    text-align: center;
+    font-family: $font-title-alt;
+    font-size: 20px;
+    font-weight: $medium;
+    color: black;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+    max-height: calc(2 * 1.3em);
+  }
+
+  &__card-stars {
+    grid-area: stars;
+    width: fit-content;
+    @include flex($justify: center);
+    gap: 4px;
+
+    @include media-max($breakpoint-md) {
+      margin: 0 auto;
+    }
+  }
+
+  &__star-svg {
+    width: 30px;
+    height: 28px;
+    display: block;
+    flex-shrink: 0;
+    stroke: #3e3732;
+    stroke-width: 2px;
+    // stroke-linejoin: round;
+    fill: transparent;
+
+    transition:
+      fill 0.3s ease,
+      stroke 0.3s ease;
+
+    &.is-filled {
+      fill: $cream;
+    }
+  }
+
+  &__card-date {
+    grid-area: date;
+    font-family: $font-alt;
+    color: black;
+    font-size: 16px;
+    font-weight: $medium;
+    margin-inline: auto 0;
+
+    @include media-max($breakpoint-md) {
+      margin: auto;
+    }
+  }
+
+  &__card-text {
+    grid-area: text;
+    align-self: start;
+    font-weight: $regular;
+    font-family: $font-alt;
+    font-size: 14px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 8;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+    max-height: calc(8 * 1.3em);
+
+    @include media-max($breakpoint-md) {
+      -webkit-line-clamp: 10;
+      max-height: calc(10 * 1.3em);
+    }
+  }
+
+  &__card-more-btn {
+    grid-area: btn;
+    color: $dark-green;
+    font-weight: $medium;
+    font-size: 16px;
+    text-transform: lowercase;
+    cursor: pointer;
+    width: fit-content;
+    margin: 0 auto;
+    letter-spacing: 0;
+    text-indent: 0;
+
+    transition:
+      letter-spacing 0.6s ease-in,
+      text-indent 0.6s ease-in,
+      transform 0.1s ease;
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        letter-spacing: 0.25em;
+        text-indent: 0.25em;
+      }
+    }
+  }
+
+  &__maps-links {
+    z-index: 100;
+    @include flex();
+    align-self: center;
+    gap: 24px;
+    width: fit-content;
+    height: fit-content;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+
+    @include media-max($breakpoint-md) {
+      flex-direction: column;
+    }
+  }
+
+  &__link {
+    text-align: center;
+    border-radius: 8px;
+    background-color: rgba($light-blue, 0.3);
+    color: white;
+    font-family: $font-alt;
+    font-size: 20px;
+    font-weight: $medium;
+    padding: 8px;
+    @include flex;
+    gap: 10px;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    transition:
+      text-decoration-color 0.3s linear,
+      background-color 0.5s linear;
+
+    &--yandex {
+      border: 2px solid #ff4433;
+    }
+
+    &--2gis {
+      border: 2px solid #19aa1e;
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        text-decoration-color: white;
+        background-color: rgba($light-blue, 0.5);
+      }
+    }
+
+    @include media-max($breakpoint-md) {
+      width: 100%;
+      font-size: 16px;
+    }
+  }
+
+  &__link-img {
+    height: 32px;
+    aspect-ratio: 1 / 1;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 100% contain;
+
+    &--yandex {
+      background-image: url("/src/assets/icons/Ymaps.png");
+    }
+
+    &--2gis {
+      background-image: url("/src/assets/icons/2ГИС.png");
+    }
+  }
+}
+
+.reviews-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  background-color: transparent;
+  transition:
+    opacity 0.4s ease,
+    visibility 0.4s ease;
+
+  &.is-open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  &__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba($bg-main, 0.8);
+    box-shadow: inset 0 0 64px 0 $light-blue;
+    backdrop-filter: blur(8px);
+  }
+
+  &__body {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(95%, 768px);
+    height: 100%;
+    max-height: 620px;
+
+    background-color: transparent;
+    border-top: 2px solid rgba(white, 0.3);
+    border-bottom: 2px solid rgba(white, 0.3);
+    padding: 48px 24px 24px;
+    box-shadow: 0 0 4px 2px rgba($bg-main, 0.3);
+    backdrop-filter: blur(12px);
+
+    @include flex(column);
+
+    @media screen and (max-width: $breakpoint-sm),
+      screen and (max-height: $breakpoint-sm) {
+      padding: 48px 8px 32px;
+      height: 95vh;
+    }
+  }
+
+  &__close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 10;
+    width: 32px;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background: transparent;
+    border: 2px solid rgba(white, 0.1);
+    box-shadow: 0 0 3px 0 white;
+    cursor: pointer;
+    transition: box-shadow 0.6s linear;
+    @include flex($justify: center);
+    -webkit-tap-highlight-color: transparent;
+
+    &::before {
+      content: "";
+      width: 24px;
+      aspect-ratio: 1 / 1;
+      background-color: $light-blue;
+      mask-image: url("/src/assets/icons/close-icon.svg");
+      -webkit-mask-image: url("/src/assets/icons/close-icon.svg");
+      mask-position: center;
+      mask-repeat: no-repeat;
+      mask-size: contain;
+      transition: background-color 0.3s ease;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 48px;
+      height: 48px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        box-shadow: 0 0 32px 0 white;
+        &::before {
+          background-color: $cream;
+        }
+      }
+    }
+
+    &:active {
+      box-shadow: 0 0 15px 0 white;
+      &::before {
+        background-color: $cream;
+      }
+    }
+  }
+
+  &__content {
+    @include flex(column, $justify: flex-start);
+    width: 100%;
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: 12px;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: $cream;
+      border-radius: 4px;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+      background: $dark-green;
+    }
+  }
+
+  &__stars-date {
+    @include flex;
+    width: 100%;
+    height: 32px;
+    margin-bottom: 32px;
+  }
+
+  &__author {
+    font-family: $font-title-alt;
+    font-size: 20px;
+    font-weight: $medium;
+    font-style: normal;
+    margin-bottom: 24px;
+  }
+
+  &__stars {
+  }
+
+  &__date {
+    font-family: $font-alt;
+    font-size: 16px;
+    font-weight: $medium;
+  }
+
+  &__text {
+    font-size: 16px;
+    font-weight: $light;
+    line-height: 2;
+    word-spacing: 0.3em;
+    margin-bottom: 48px;
+  }
+}
+
+.reviews-equalizer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 120px;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  padding: 0;
+
+  &__track {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    width: 100%;
+    height: 100%;
+  }
+
+  &-ray {
+    width: 32px;
+    flex-shrink: 0;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    transition: background-color 0.2s ease;
+    border: 1px solid rgba(grey, 0.2);
+    border-top: none;
+
+    &--cream {
+      background-color: rgba($cream, 0.2);
+    }
+    &--light-blue {
+      background-color: rgba($light-blue, 0.2);
+    }
+    &--light-green {
+      background-color: rgba($light-green, 0.2);
+    }
+    &--dark-green {
+      background-color: rgba($dark-green, 0.2);
+    }
+    &--dark-blue {
+      background-color: rgba($dark-blue, 0.2);
+    }
+  }
+}
