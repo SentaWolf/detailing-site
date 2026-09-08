@@ -20,13 +20,13 @@ import {
   initPortfolioSlider,
 } from "./js/portfolio.js";
 
-import { initServicesCatalog, initServicesEqualizer } from "./js/services.js";
+import { initServicesCatalog } from "./js/services.js";
 
-import { initReviewsEqualizer, initReviewsSlider } from "./js/reviews.js";
-
-import { initContactsEqualizer } from "./js/contacts.js";
+import { initReviewsSlider } from "./js/reviews.js";
 
 import { initContactsMap } from "./js/contacts-map.js";
+
+import { initEqualizer } from "./js/animations.js";
 
 initHeroAnimation();
 initHeroAnchorScroll();
@@ -40,8 +40,6 @@ initPortfolioAmbientLight();
 initPortfolioBeforeAfter();
 initPortfolioSlider();
 initServicesCatalog();
-initServicesEqualizer();
-initReviewsEqualizer();
 initReviewsSlider();
-initContactsEqualizer();
 initContactsMap();
+initEqualizer();

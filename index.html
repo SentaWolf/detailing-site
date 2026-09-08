@@ -14,6 +14,12 @@
       content="#687069"
       media="(prefers-color-scheme: dark)"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz@0,14..32;1,14..32&family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Russo+One&display=swap"
+      rel="stylesheet"
+    />
 
     <title>detailing</title>
   </head>
@@ -50,7 +56,7 @@
 
               <li class="nav-item nav-item--trigger">
                 <button
-                  class="header__menu-trigger header__menu-trigger--opend"
+                  class="header__menu-trigger header__menu-trigger--opened"
                   type="button"
                   aria-expanded="false"
                   aria-controls="mobileMenu"
@@ -78,7 +84,7 @@
           </a>
         </div>
 
-        <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu no-scrollbar" id="mobileMenu">
           <nav class="header__nav--mobile" aria-label="Мобильное меню">
             <ul class="header__menu--mobile">
               <li class="nav-item--mobile">
@@ -429,6 +435,32 @@
                       >
                       <p class="portfolio__desc-text">
                         Устранение задиров в цилиндрах, гильзовка блока
+                        цилиндров качественными толстостенными
+                        гильзами.Устранение задиров в цилиндрах, гильзовка блока
+                        цилиндров качественными толстостенными
+                        гильзами.Устранение задиров в цилиндрах, гильзовка блока
+                        цилиндров качественными толстостенными
+                        гильзами.Устранение задиров в цилиндрах, гильзовка блока
+                        цилиндров качественными толстостенными
+                        гильзами.Устранение задиров в цилиндрах, гильзовка блока
+                        цилиндров качественными толстостенными
+                        гильзами.Устранение задиров в цилиндрах, гильзовка блока
+                        цилиндров качественными толстостенными
+                        гильзами.Устранение задиров в цилиндрах, гильзовка блока
+                        цилиндров качественными толстостенными
+                        гильзами.Устранение задиров в цилиндрах, гильзовка блока
+                        цилиндров качественными толстостенными
+                        гильзами.Устранение задиров в цилиндрах, гильзовка блока
+                        цилиндров качественными толстостенными
+                        гильзами.Устранение задиров в цилиндрах, гильзовка блока
+                        цилиндров качественными толстостенными
+                        гильзами.Устранение задиров в цилиндрах, гильзовка блока
+                        цилиндров качественными толстостенными
+                        гильзами.Устранение задиров в цилиндрах, гильзовка блока
+                        цилиндров качественными толстостенными
+                        гильзами.Устранение задиров в цилиндрах, гильзовка блока
+                        цилиндров качественными толстостенными
+                        гильзами.Устранение задиров в цилиндрах, гильзовка блока
                         цилиндров качественными толстостенными гильзами.
                       </p>
                     </li>
@@ -648,15 +680,13 @@
       aria-labelledby="servicesTitle"
     >
       <div class="services__overlay" aria-hidden="true"></div>
+
       <div
-        class="services-equalizer"
+        class="equalizer equalizer--bottom"
         id="servicesEqualizerAmbient"
         aria-hidden="true"
       >
-        <div
-          class="services-equalizer__track"
-          id="servicesEqualizerTrack"
-        ></div>
+        <div class="equalizer__track" id="servicesEqualizerTrack"></div>
       </div>
 
       <div class="services__container">
@@ -847,11 +877,11 @@
     <section class="reviews" id="reviewsSection" aria-labelledby="reviewsTitle">
       <div class="reviews__overlay" aria-hidden="true"></div>
       <div
-        class="reviews-equalizer"
+        class="equalizer equalizer--top"
         id="reviewsEqualizerAmbient"
         aria-hidden="true"
       >
-        <div class="reviews-equalizer__track" id="reviewsEqualizerTrack"></div>
+        <div class="equalizer__track" id="reviewsEqualizerTrack"></div>
       </div>
 
       <div class="reviews__container">
@@ -1284,15 +1314,13 @@
         <span class="line line-1 long"></span>
       </div>
       <div class="contacts__overlay" aria-hidden="true"></div>
+
       <div
-        class="contacts-equalizer"
+        class="equalizer equalizer--top"
         id="contactsEqualizerAmbient"
         aria-hidden="true"
       >
-        <div
-          class="contacts-equalizer__track"
-          id="contactsEqualizerTrack"
-        ></div>
+        <div class="equalizer__track" id="contactsEqualizerTrack"></div>
       </div>
 
       <div class="contacts__container">
@@ -1567,22 +1595,21 @@
     </footer>
 
     <div
-      class="advantages-popup"
+      class="popup advantages-popup"
       id="advantagesPopup"
       aria-hidden="true"
       role="dialog"
       aria-modal="true"
       aria-labelledby="advantagesPopupTitle"
     >
-      <div class="advantages-popup__overlay"></div>
-      <div class="advantages-popup__body">
+      <div class="popup__overlay"></div>
+      <div class="popup__body">
         <button
-          class="advantages-popup__close"
+          class="popup__close"
           type="button"
           aria-label="Закрыть окно"
         ></button>
-
-        <div class="advantages-popup__content">
+        <div class="popup__content">
           <div class="advantages-popup__title" id="advantagesPopupTitle">
             Подробнее
           </div>
@@ -1594,27 +1621,24 @@
     </div>
 
     <div
-      class="portfolio-popup"
+      class="popup portfolio-popup"
       id="portfolioPopup"
       aria-hidden="true"
       role="dialog"
       aria-modal="true"
       aria-labelledby="portfolioPopupTitle"
     >
-      <div class="portfolio-popup__overlay"></div>
-
-      <div class="portfolio-popup__body">
+      <div class="popup__overlay"></div>
+      <div class="popup__body">
         <button
-          class="portfolio-popup__close"
+          class="popup__close"
           type="button"
           aria-label="Закрыть окно"
         ></button>
-
-        <div class="portfolio-popup__content">
+        <div class="popup__content">
           <div class="portfolio-popup__title" id="portfolioPopupTitle">
             Детали кейса
           </div>
-
           <ul class="portfolio-popup__list" id="portfolioPopupList">
             <li class="portfolio-popup__item">
               <b class="portfolio-popup__label">Срок работы:</b>
@@ -1623,7 +1647,6 @@
                 id="portfolioPopupTime"
               ></span>
             </li>
-
             <li class="portfolio-popup__item">
               <b class="portfolio-popup__label">Стоимость:</b>
               <span
@@ -1643,22 +1666,21 @@
     </div>
 
     <div
-      class="services-popup"
+      class="popup services-popup"
       id="servicesPopup"
       aria-hidden="true"
       role="dialog"
       aria-modal="true"
       aria-labelledby="popupServicesTitle"
     >
-      <div class="services-popup__overlay"></div>
-      <div class="services-popup__body">
+      <div class="popup__overlay"></div>
+      <div class="popup__body">
         <button
-          class="services-popup__close"
+          class="popup__close"
           type="button"
           aria-label="Закрыть окно"
         ></button>
-
-        <div class="services-popup__content">
+        <div class="popup__content">
           <img
             class="services-popup__image"
             id="popupServicesImage"
@@ -1677,22 +1699,21 @@
     </div>
 
     <div
-      class="reviews-popup"
+      class="popup reviews-popup"
       id="reviewsPopup"
       aria-hidden="true"
       role="dialog"
       aria-modal="true"
       aria-labelledby="popupReviewsAuthor"
     >
-      <div class="reviews-popup__overlay"></div>
-      <div class="reviews-popup__body">
+      <div class="popup__overlay"></div>
+      <div class="popup__body">
         <button
-          class="reviews-popup__close"
+          class="popup__close"
           type="button"
           aria-label="Закрыть окно"
         ></button>
-
-        <div class="reviews-popup__content">
+        <div class="popup__content">
           <cite class="reviews-popup__author" id="popupReviewsAuthor"
             >Имя автора</cite
           >

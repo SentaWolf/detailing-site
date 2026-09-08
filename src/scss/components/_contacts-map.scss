@@ -39,6 +39,15 @@
     position: relative;
     overflow: hidden;
 
+    .ymaps3--control-button {
+      display: none !important;
+    }
+
+    // .ymaps3x0--map-copyrights,
+    // [class*="map-copyrights"] {
+    //   display: none !important;
+    // }
+
     @media (max-width: 768px) {
       height: 420px;
     }

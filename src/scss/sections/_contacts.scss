@@ -11,45 +11,7 @@
   overflow: hidden;
 
   &__layer-lines {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    @include flex($align: flex-start);
-    width: 50%;
-    pointer-events: none;
-    gap: 48px;
-    padding-right: 48px;
-
-    @include media-max($breakpoint-md) {
-      padding-right: 24px;
-    }
-
-    .line {
-      width: 0;
-      background-color: #ffffff;
-    }
-
-    .line-1 {
-      @include neon-line($light-green, 65%, 1.8s);
-    }
-    .line-2 {
-      @include neon-line($light-green, 45%, 2.4s);
-    }
-    .line-3 {
-      @include neon-line($light-green, 55%);
-    }
-    .line-4 {
-      @include neon-line($light-green, 35%, 1.4s);
-    }
-    .line-5 {
-      @include neon-line($light-green, 45%, 1.2s);
-    }
-    .line-6 {
-      @include neon-line($light-green, 25%, 1.6s);
-    }
+    @include neon-lines-group("right");
   }
 
   &__overlay {
@@ -247,7 +209,7 @@
     padding: 12px;
     border-radius: 5px;
     color: black;
-    font-size: 20;
+    font-size: 20px;
     font-weight: $regular;
     text-transform: uppercase;
     background-color: $cream;
@@ -407,52 +369,6 @@
   }
 }
 
-.contacts-equalizer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 120px;
-  overflow: hidden;
-  display: flex;
-  align-items: flex-start;
-  padding: 0;
-
-  &__track {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    width: 100%;
-    height: 100%;
-  }
-
-  &-ray {
-    width: 32px;
-    flex-shrink: 0;
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    transition: background-color 0.2s ease;
-    border: 1px solid rgba(grey, 0.2);
-    border-bottom: none;
-
-    &--cream {
-      background-color: rgba($cream, 0.2);
-    }
-    &--light-blue {
-      background-color: rgba($light-blue, 0.2);
-    }
-    &--light-green {
-      background-color: rgba($light-green, 0.2);
-    }
-    &--dark-green {
-      background-color: rgba($dark-green, 0.2);
-    }
-    &--dark-blue {
-      background-color: rgba($dark-blue, 0.2);
-    }
-  }
-}
-
 .footer {
   position: relative;
   width: 100%;
@@ -498,12 +414,5 @@
         text-decoration-color: $dark-green;
       }
     }
-  }
-
-  &__copy {
-  }
-  &__policy {
-  }
-  &__developer {
   }
 }

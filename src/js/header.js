@@ -7,7 +7,7 @@ export function initHeaderMenuScroll() {
   const headerNav = document.querySelector(".header__nav");
   const logo = document.querySelector(".header__logo");
 
-  const menuBtn = document.querySelector(".header__menu-trigger--opend");
+  const menuBtn = document.querySelector(".header__menu-trigger--opened");
   const mobileMenu = document.querySelector(".mobile-menu");
   const closeBtn = document.querySelector(".mobile-menu__close");
 

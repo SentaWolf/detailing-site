@@ -377,11 +377,11 @@
       background-color 0.5s linear;
 
     &--yandex {
-      border: 2px solid #ff4433;
+      border: 2px solid $yandex;
     }
 
     &--2gis {
-      border: 2px solid #19aa1e;
+      border: 2px solid $gis2;
     }
 
     @media (hover: hover) {
@@ -415,139 +415,6 @@
 }
 
 .reviews-popup {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 9999;
-  opacity: 0;
-  visibility: hidden;
-  background-color: transparent;
-  transition:
-    opacity 0.4s ease,
-    visibility 0.4s ease;
-
-  &.is-open {
-    opacity: 1;
-    visibility: visible;
-  }
-
-  &__overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba($bg-main, 0.8);
-    box-shadow: inset 0 0 64px 0 $light-blue;
-    backdrop-filter: blur(8px);
-  }
-
-  &__body {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: min(95%, 768px);
-    height: 100%;
-    max-height: 620px;
-
-    background-color: transparent;
-    border-top: 2px solid rgba(white, 0.3);
-    border-bottom: 2px solid rgba(white, 0.3);
-    padding: 48px 24px 24px;
-    box-shadow: 0 0 4px 2px rgba($bg-main, 0.3);
-    backdrop-filter: blur(12px);
-
-    @include flex(column);
-
-    @media screen and (max-width: $breakpoint-sm),
-      screen and (max-height: $breakpoint-sm) {
-      padding: 48px 8px 32px;
-      height: 95vh;
-    }
-  }
-
-  &__close {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    z-index: 10;
-    width: 32px;
-    aspect-ratio: 1 / 1;
-    border-radius: 50%;
-    background: transparent;
-    border: 2px solid rgba(white, 0.1);
-    box-shadow: 0 0 3px 0 white;
-    cursor: pointer;
-    transition: box-shadow 0.6s linear;
-    @include flex($justify: center);
-    -webkit-tap-highlight-color: transparent;
-
-    &::before {
-      content: "";
-      width: 24px;
-      aspect-ratio: 1 / 1;
-      background-color: $light-blue;
-      mask-image: url("/src/assets/icons/close-icon.svg");
-      -webkit-mask-image: url("/src/assets/icons/close-icon.svg");
-      mask-position: center;
-      mask-repeat: no-repeat;
-      mask-size: contain;
-      transition: background-color 0.3s ease;
-    }
-
-    &::after {
-      content: "";
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 48px;
-      height: 48px;
-      transform: translate(-50%, -50%);
-      border-radius: 50%;
-    }
-
-    @media (hover: hover) {
-      &:hover {
-        box-shadow: 0 0 32px 0 white;
-        &::before {
-          background-color: $cream;
-        }
-      }
-    }
-
-    &:active {
-      box-shadow: 0 0 15px 0 white;
-      &::before {
-        background-color: $cream;
-      }
-    }
-  }
-
-  &__content {
-    @include flex(column, $justify: flex-start);
-    width: 100%;
-    flex-grow: 1;
-    overflow-y: auto;
-    padding-right: 12px;
-
-    &::-webkit-scrollbar {
-      width: 6px;
-    }
-    &::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    &::-webkit-scrollbar-thumb {
-      background: $cream;
-      border-radius: 4px;
-    }
-    &::-webkit-scrollbar-thumb:hover {
-      background: $dark-green;
-    }
-  }
-
   &__stars-date {
     @include flex;
     width: 100%;
@@ -578,51 +445,5 @@
     line-height: 2;
     word-spacing: 0.3em;
     margin-bottom: 48px;
-  }
-}
-
-.reviews-equalizer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 120px;
-  overflow: hidden;
-  display: flex;
-  align-items: flex-end;
-  padding: 0;
-
-  &__track {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    width: 100%;
-    height: 100%;
-  }
-
-  &-ray {
-    width: 32px;
-    flex-shrink: 0;
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    transition: background-color 0.2s ease;
-    border: 1px solid rgba(grey, 0.2);
-    border-top: none;
-
-    &--cream {
-      background-color: rgba($cream, 0.2);
-    }
-    &--light-blue {
-      background-color: rgba($light-blue, 0.2);
-    }
-    &--light-green {
-      background-color: rgba($light-green, 0.2);
-    }
-    &--dark-green {
-      background-color: rgba($dark-green, 0.2);
-    }
-    &--dark-blue {
-      background-color: rgba($dark-blue, 0.2);
-    }
   }
 }

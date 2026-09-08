@@ -461,11 +461,9 @@ export function initAdvantagesSlider() {
     ? popup.querySelector(".advantages-popup__text")
     : null;
   const popupCloseBtn = popup
-    ? popup.querySelector(".advantages-popup__close")
+    ? popup.querySelector(".popup__close") || popup.querySelector("button")
     : null;
-  const popupOverlay = popup
-    ? popup.querySelector(".advantages-popup__overlay")
-    : null;
+  const popupOverlay = popup ? popup.querySelector(".popup__overlay") : null;
 
   let lastActiveElement = null;
 

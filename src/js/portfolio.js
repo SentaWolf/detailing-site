@@ -524,14 +524,10 @@ export function initPortfolioSlider() {
   const popupPrice = document.getElementById("portfolioPopupPrice");
   const popupText = document.getElementById("portfolioPopupText");
   const popupList = document.getElementById("portfolioPopupList");
-
   const popupCloseBtn = popup
-    ? popup.querySelector(".portfolio-popup__close") ||
-      popup.querySelector("button")
+    ? popup.querySelector(".popup__close") || popup.querySelector("button")
     : null;
-  const popupOverlay = popup
-    ? popup.querySelector(".portfolio-popup__overlay")
-    : null;
+  const popupOverlay = popup ? popup.querySelector(".popup__overlay") : null;
 
   let lastActivePortfolioElement = null;
 

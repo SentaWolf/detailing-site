@@ -1,0 +1,72 @@
+@use "../variables" as *;
+
+.equalizer {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 120px;
+  overflow: hidden;
+  display: flex;
+  padding: 0;
+  pointer-events: none;
+
+  &--top {
+    top: 0;
+    align-items: flex-start;
+
+    .equalizer__track {
+      align-items: flex-start;
+    }
+
+    .equalizer-ray {
+      border-bottom: none;
+      border-top: 1px solid rgba(grey, 0.2);
+    }
+  }
+
+  &--bottom {
+    bottom: 0;
+    align-items: flex-end;
+
+    .equalizer__track {
+      align-items: flex-end;
+    }
+
+    .equalizer-ray {
+      border-top: none;
+      border-bottom: 1px solid rgba(grey, 0.2);
+    }
+  }
+
+  &__track {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    align-items: flex-start;
+  }
+
+  &-ray {
+    width: 32px;
+    flex-shrink: 0;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    transition: background-color 0.2s ease;
+
+    &--cream {
+      background-color: rgba($cream, 0.2);
+    }
+    &--light-blue {
+      background-color: rgba($light-blue, 0.2);
+    }
+    &--light-green {
+      background-color: rgba($light-green, 0.2);
+    }
+    &--dark-green {
+      background-color: rgba($dark-green, 0.2);
+    }
+    &--dark-blue {
+      background-color: rgba($dark-blue, 0.2);
+    }
+  }
+}

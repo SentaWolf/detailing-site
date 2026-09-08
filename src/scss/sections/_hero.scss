@@ -1,17 +1,5 @@
 @use "../variables" as *;
-
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  border: 0;
-  padding: 0;
-  white-space: nowrap;
-  clip-path: inset(100%);
-  clip: rect(0 0 0 0);
-  overflow: hidden;
-}
+@use "../animations" as *;
 
 .hero {
   position: relative;
@@ -95,7 +83,7 @@
         background-position: center top;
         background-size: 100% 85%;
         opacity: 0;
-        animation: autoHeadlightFlicker 6s ease-in-out infinite;
+        animation: heroAutoHeadlightFlicker 6s ease-in-out infinite;
         transition: opacity 0.4s ease;
 
         @include media-max($breakpoint-xl) {
@@ -145,7 +133,7 @@
           0 0 20px 6px rgba($light-blue, 0.6);
 
         opacity: 0;
-        animation: flySparks 7s linear infinite;
+        animation: heroFlySparks 7s linear infinite;
 
         @media (hover: hover) {
           &:nth-child(1) {
@@ -221,40 +209,7 @@
     }
 
     &.layer-lines {
-      z-index: 3;
-      @include flex($align: flex-start);
-      width: 50%;
-      pointer-events: none;
-      gap: 48px;
-      padding-left: 48px;
-
-      @include media-max($breakpoint-md) {
-        padding-left: 24px;
-      }
-
-      .line {
-        width: 0;
-        background-color: #ffffff;
-      }
-
-      .line-1 {
-        @include neon-line($light-green, 65%, 1.8s);
-      }
-      .line-2 {
-        @include neon-line($light-green, 45%, 2.4s);
-      }
-      .line-3 {
-        @include neon-line($light-green, 55%);
-      }
-      .line-4 {
-        @include neon-line($light-green, 35%, 1.4s);
-      }
-      .line-5 {
-        @include neon-line($light-green, 45%, 1.2s);
-      }
-      .line-6 {
-        @include neon-line($light-green, 25%, 1.6s);
-      }
+      @include neon-lines-group("left");
     }
 
     &.layer-main {
@@ -323,12 +278,6 @@
         transition:
           transform 0.6s cubic-bezier(0.25, 0.01, 1, 1),
           filter 0.5s ease-in-out;
-
-        @include media-max($breakpoint-md) {
-          height: auto;
-          aspect-ratio: 1200 / 960;
-          background-size: 130% auto;
-        }
       }
 
       .car-lights {
@@ -349,7 +298,7 @@
           background-size: 130% auto;
         }
 
-        animation: autoHeadlightFlicker 6s ease-in-out infinite;
+        animation: heroAutoHeadlightFlicker 6s ease-in-out infinite;
 
         transition:
           opacity 0.4s ease,
@@ -363,10 +312,16 @@
         }
 
         .car-body {
+          height: auto;
+          aspect-ratio: 1200 / 960;
+          background-size: 130% auto;
           transform: none !important;
         }
 
         .car-lights {
+          height: auto;
+          aspect-ratio: 1200 / 960;
+          background-size: 130% auto;
           animation: autoHeadlightFlicker 6s ease-in-out infinite !important;
           filter: none !important;
         }
@@ -392,9 +347,6 @@
 
         @include media-max($breakpoint-lg) {
           padding: 56px 0;
-        }
-        @include media-max($breakpoint-md) {
-          padding: 48px 0;
         }
         @include media-max($breakpoint-md) {
           padding: 40px 0;
@@ -546,7 +498,7 @@
             background-position: center center;
             background-size: contain;
 
-            animation: arrowBounce 1.6s ease-in-out infinite;
+            animation: heroArrowBounce 1.6s ease-in-out infinite;
             transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 
             @include media-max($breakpoint-md) {
@@ -571,100 +523,5 @@
         }
       }
     }
-  }
-}
-
-@keyframes neonPulse {
-  0% {
-    box-shadow:
-      0 0 0 1px #ffffff,
-      0 0 10px 3px #ffffff,
-      0 0 20px 5px var(--neon-color);
-  }
-  100% {
-    box-shadow:
-      0 0 0 1px #ffffff,
-      0 0 14px 4px #ffffff,
-      0 0 35px 12px var(--neon-color);
-  }
-}
-
-@keyframes autoHeadlightFlicker {
-  0%,
-  80%,
-  100% {
-    opacity: 0;
-  }
-  83% {
-    opacity: 0.8;
-  }
-  85% {
-    opacity: 0.1;
-  }
-  87% {
-    opacity: 0.9;
-  }
-  89% {
-    opacity: 0.3;
-  }
-  92%,
-  96% {
-    opacity: 1;
-  }
-}
-
-@keyframes arrowBounce {
-  0%,
-  100% {
-    transform: translateY(0) scale(1);
-  }
-  50% {
-    transform: translateY(4px) scale(1.15);
-  }
-}
-
-@keyframes flySparks {
-  0% {
-    transform: translateY(110vh) translateX(0) scale(0.5);
-    opacity: 0;
-  }
-  15% {
-    opacity: 1;
-  }
-  50% {
-    transform: translateY(50vh) translateX(30px) scale(1.1);
-  }
-  85% {
-    opacity: 0.8;
-  }
-  100% {
-    transform: translateY(-10vh) translateX(-20px) scale(0.4);
-    opacity: 0;
-  }
-}
-
-@keyframes autoTopLightsFlicker {
-  0%,
-  80%,
-  100% {
-    opacity: 0;
-    filter: blur(4px);
-  }
-  83% {
-    opacity: 0.4;
-  }
-  85% {
-    opacity: 0.1;
-  }
-  87% {
-    opacity: 0.6;
-  }
-  89% {
-    opacity: 0.2;
-  }
-  92%,
-  96% {
-    opacity: 0.7;
-    filter: blur(2px);
   }
 }
