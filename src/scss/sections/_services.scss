@@ -143,7 +143,7 @@
 
   &__tabs {
     cursor: pointer;
-    @include flex;
+    @include flex($justify: flex-start);
     flex-shrink: 0;
     gap: 12px;
     margin-bottom: 32px;

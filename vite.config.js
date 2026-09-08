@@ -7,4 +7,8 @@ export default defineConfig({
       plugins: [autoprefixer()],
     },
   },
+  server: {
+    host: "automania.local",
+    port: 5173,
+  },
 });

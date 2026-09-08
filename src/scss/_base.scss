@@ -7,6 +7,28 @@
 
 html {
   scroll-behavior: smooth;
+  scrollbar-color: $light-green $bg-main;
+  scrollbar-width: thin;
+
+  &::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $bg-main;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $light-green;
+    border-radius: 20px;
+    border: 2px solid $bg-main;
+    transition: background-color 0.2s ease;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: $light-green;
+  }
 }
 
 body {

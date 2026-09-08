@@ -93,54 +93,110 @@ export function initContactsEqualizer() {
   });
 }
 
-export async function initContactsMap() {
-  const mapContainer = document.getElementById("servicesMap");
-  if (!mapContainer || typeof ymaps3 === "undefined") return;
+// export async function initContactsMap() {
+//   const mapContainer = document.getElementById("servicesMap");
+//   if (!mapContainer || typeof ymaps3 === "undefined") return;
 
-  // Ждем, пока движок Яндекса полностью загрузит модули в память
-  await ymaps3.ready;
+//   await ymaps3.ready;
 
-  const { YMap, YMapDefaultSchemeLayer, YMapDefaultFeaturesLayer } = ymaps3;
-  // Модуль для создания кастовных маркеров (Default Marker)
-  const { YMapDefaultMarker } = await ymaps3.import(
-    "@yandex/ymaps3-markers@0.0.1",
-  );
+//   const {
+//     YMap,
+//     YMapDefaultSchemeLayer,
+//     YMapDefaultFeaturesLayer,
+//     YMapControls,
+//   } = ymaps3;
 
-  // КООРДИНАТЫ ВАШЕЙ СТУДИИ (Тверь, Промышленный пр., 1)
-  // Внимание: В API 3.0 координаты пишутся в порядке [ДОЛГОТА, ШИРОТА]!
-  const studioCoordinates = [35.946399, 56.849855];
+//   const { YMapDefaultMarker } = await ymaps3.import(
+//     "@yandex/ymaps3-markers@0.0.1",
+//   );
+//   const { YMapZoomControl, YMapGeolocationControl } = await ymaps3.import(
+//     "@yandex/ymaps3-controls@0.0.1",
+//   );
+//   const { YMapRouter } = await ymaps3.import("@yandex/ymaps3-router@0.0.1");
 
-  // 1. Создаем саму интерактивную карту
-  const map = new YMap(mapContainer, {
-    location: {
-      center: studioCoordinates, // Центрируем карту на студии
-      zoom: 16, // Масштаб (оптимально для городов, чтобы видеть улицы)
-    },
-  });
+//   const studioCoordinates = [35.931758, 56.827823];
 
-  // 2. Добавляем стандартный слой схемы дорог и домов
-  map.addChild(
-    new YMapDefaultSchemeLayer({
-      theme: "dark", // МАГИЯ: Автоматически включает ТЕМНУЮ премиальную тему карты под ваш сайт!
-    }),
-  );
+//   const map = new YMap(mapContainer, {
+//     location: {
+//       center: studioCoordinates,
+//       zoom: 16,
+//     },
+//     behaviors: ["drag", "dblClick"],
+//   });
 
-  map.addChild(new YMapDefaultFeaturesLayer());
+//   // Возвращаем стандартную, встроенную тёмную тему Яндекса без лишних массивов
+//   map.addChild(
+//     new YMapDefaultSchemeLayer({
+//       theme: "dark",
+//     }),
+//   );
 
-  // 3. Создаем ваш ОСОБЫЙ КАСТОМНЫЙ ЗНАЧЕК-МАРКЕР компании
-  const customMarker = new YMapDefaultMarker({
-    coordinates: studioCoordinates,
-    title: "AutoMania",
-    subtitle: "Детейлинг-студия премиум класса",
-    color: "#00E5FF", // Цвет выноски-ножки маркера под ваш $light-blue
+//   map.addChild(new YMapDefaultFeaturesLayer());
 
-    // ВШИВАЕМ ВАШУ КАРТИНКУ-МАРКЕР ИЗ ФИГМЫ:
-    iconName: "custom",
-    iconHref: "/src/assets/icons/map-pin.svg", // Путь к вашей кастомной иконке логотипа
-    iconWidth: 40, // Фиксированная ширина значка
-    iconHeight: 40, // Фиксированная высота значка
-  });
+//   // Панель управления справа (масштабирование + определение местоположения)
+//   const controlsContainer = new YMapControls({ position: "right" });
+//   controlsContainer.addChild(new YMapZoomControl({}));
+//   controlsContainer.addChild(new YMapGeolocationControl({}));
+//   map.addChild(controlsContainer);
 
-  // Сажаем маркер на карту
-  map.addChild(customMarker);
-}
+//   // Кастомный маркер-булавка
+//   const markerElement = document.createElement("img");
+//   markerElement.src = "/src/assets/icons/logo.svg";
+//   markerElement.style.width = "40px";
+//   markerElement.style.height = "40px";
+//   markerElement.style.transform = "translate(-50%, -100%)";
+
+//   const customMarker = new YMapDefaultMarker({
+//     coordinates: studioCoordinates,
+//     color: "#00E5FF",
+//     element: markerElement,
+//     popup: {
+//       position: "top",
+//       content: `
+//         <div style="padding: 10px; color: #000; font-family: sans-serif; min-width: 180px;">
+//           <h4 style="margin: 0 0 5px 0; font-size: 14px; color: #111;">AutoMania</h4>
+//           <p style="margin: 0 0 8px 0; font-size: 12px; color: #666;">Тверь, Промышленный пр., 1<br>Ежедневно: 10:00 - 20:00</p>
+//           <a href="https://yandex.ru" target="_blank" style="display: inline-block; font-size: 12px; color: #00E5FF; text-decoration: none; font-weight: bold;">Маршрут в Навигаторе →</a>
+//         </div>
+//       `,
+//     },
+//   });
+
+//   map.addChild(customMarker);
+
+//   // Независимая кнопка «Построить маршрут» поверх карты
+//   const routeBtn = document.createElement("button");
+//   routeBtn.type = "button";
+//   routeBtn.innerText = "Построить маршрут";
+//   routeBtn.style.cssText = `
+//     position: absolute;
+//     top: 20px;
+//     left: 20px;
+//     z-index: 1000;
+//     background: #687069;
+//     color: #fff;
+//     border: none;
+//     padding: 12px 16px;
+//     font-family: "Montserrat", sans-serif;
+//     font-size: 14px;
+//     font-weight: 400;
+//     text-transform: uppercase;
+//     cursor: pointer;
+//     border-radius: 4px;
+//     box-shadow: 0 4px 12px 0 #a0b196;
+//     transition: transform 0.2s;
+//   `;
+
+//   routeBtn.onmouseenter = () => (routeBtn.style.transform = "scale(1.05)");
+//   routeBtn.onmouseleave = () => (routeBtn.style.transform = "scale(1)");
+
+//   routeBtn.onclick = () => {
+//     window.open(
+//       "https://yandex.ru/maps/?rtext=~56.828215,35.931806&rtt=mt",
+//       "_blank",
+//     );
+//   };
+
+//   mapContainer.style.position = "relative";
+//   mapContainer.appendChild(routeBtn);
+// }

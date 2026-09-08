@@ -141,6 +141,7 @@ export function initServicesCatalog() {
     if (cardImg) {
       popupImage.src = cardImg.src;
       popupImage.alt = cardImg.alt || "Услуга детейлинга";
+      popupImage.setAttribute("aria-hidden", "false");
     }
     if (cardPrice) popupPrice.textContent = cardPrice.textContent;
     if (cardTitle) popupTitle.textContent = cardTitle.textContent;
@@ -164,6 +165,7 @@ export function initServicesCatalog() {
 
     document.documentElement.style.overflow = "";
     document.body.style.overflow = "";
+    if (popupImage) popupImage.setAttribute("aria-hidden", "true");
 
     if (
       lastActiveServicesElement &&
@@ -228,14 +230,24 @@ export function initServicesCatalog() {
   }
 
   if (tabsContainer) {
+    const servicesPanel = document.getElementById("servicesPanel");
+
     tabsContainer.addEventListener("click", (e) => {
       const tabBtn = e.target.closest(".services__tab-btn");
       if (!tabBtn || tabBtn.classList.contains("is-active")) return;
 
-      tabsContainer
-        .querySelectorAll(".services__tab-btn")
-        .forEach((btn) => btn.classList.remove("is-active"));
+      tabsContainer.querySelectorAll(".services__tab-btn").forEach((btn) => {
+        btn.classList.remove("is-active");
+        btn.setAttribute("aria-selected", "false");
+      });
+
       tabBtn.classList.add("is-active");
+      tabBtn.setAttribute("aria-selected", "true");
+
+      if (servicesPanel) {
+        const activeTabId = tabBtn.getAttribute("id");
+        servicesPanel.setAttribute("aria-labelledby", activeTabId);
+      }
 
       const filterValue = tabBtn.getAttribute("data-filter");
       filterCategory(filterValue);

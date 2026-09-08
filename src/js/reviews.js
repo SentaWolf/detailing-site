@@ -229,11 +229,14 @@ export function initReviewsSlider() {
     const cardText = cardElement.querySelector(".reviews__card-text");
 
     if (cardAuthor) popupAuthor.textContent = cardAuthor.textContent;
+
     if (cardDate) {
       popupDate.textContent = cardDate.textContent;
+
+      const rawDatetime = cardDate.getAttribute("datetime");
       popupDate.setAttribute(
         "datetime",
-        cardDate.getAttribute("datetime") || "2026-09-04",
+        rawDatetime ? rawDatetime : "2026-09-04",
       );
     }
 
@@ -241,9 +244,11 @@ export function initReviewsSlider() {
 
     if (cardStars) {
       popupStarsContainer.innerHTML = cardStars.innerHTML;
+
+      const rawAriaLabel = cardStars.getAttribute("aria-label");
       popupStarsContainer.setAttribute(
         "aria-label",
-        cardStars.getAttribute("aria-label") || "Рейтинг",
+        rawAriaLabel ? rawAriaLabel : "Рейтинг: 5 звёзд из 5 звёзд",
       );
     }
 

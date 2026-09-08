@@ -24,7 +24,9 @@ import { initServicesCatalog, initServicesEqualizer } from "./js/services.js";
 
 import { initReviewsEqualizer, initReviewsSlider } from "./js/reviews.js";
 
-import { initContactsEqualizer, initContactsMap } from "./js/contacts.js";
+import { initContactsEqualizer } from "./js/contacts.js";
+
+import { initContactsMap } from "./js/contacts-map.js";
 
 initHeroAnimation();
 initHeroAnchorScroll();

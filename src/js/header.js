@@ -19,6 +19,8 @@ export function initHeaderMenuScroll() {
     mobileMenu.classList.remove("is-open");
     menuBtn.classList.remove("is-open");
     document.body.style.overflow = "";
+
+    menuBtn.setAttribute("aria-expanded", "false");
   };
 
   menuBtn.addEventListener("click", () => {
@@ -27,6 +29,8 @@ export function initHeaderMenuScroll() {
     const isOpen = mobileMenu.classList.toggle("is-open");
     menuBtn.classList.toggle("is-open");
     document.body.style.overflow = isOpen ? "hidden" : "";
+
+    menuBtn.setAttribute("aria-expanded", isOpen ? "true" : "false");
   });
 
   if (closeBtn) {
@@ -43,15 +47,17 @@ export function initHeaderMenuScroll() {
     const link = e.target.closest(".nav-link, .nav-link--mobile");
     if (!link) return;
 
-    const targetId = link.getAttribute("href");
+    const href = link.getAttribute("href");
+    if (!href) return;
 
-    if (targetId && targetId.startsWith("#")) {
-      const targetElement = document.querySelector(targetId);
-      if (!targetElement) return;
+    const hashIndex = href.indexOf("#");
+    if (hashIndex === -1) return;
 
+    const targetId = href.substring(hashIndex);
+    const targetElement = document.querySelector(targetId);
+
+    if (targetElement) {
       e.preventDefault();
-
-      closeMenu();
 
       gsap.to(window, {
         duration: 0.8,
@@ -60,6 +66,9 @@ export function initHeaderMenuScroll() {
           offsetY: 24,
         },
         ease: "power1.inOut",
+        onComplete: () => {
+          closeMenu();
+        },
       });
     }
   });
@@ -80,26 +89,28 @@ export function initHeaderMenuScroll() {
   });
 
   const routeBtn = document.querySelector(".header__btn");
-  const targetMapSection = document.getElementById("contactsMapSection");
 
-  if (routeBtn && targetMapSection) {
+  if (routeBtn) {
     routeBtn.addEventListener("click", (e) => {
       const isMobile = window.innerWidth <= 768;
 
-      if (isMobile) {
-        const mobileUrl = routeBtn.dataset.mobileHref;
-        window.open(mobileUrl, "_blank", "noopener,noreferrer,nofollow");
-      } else {
-        closeMenu();
+      if (!isMobile) {
+        e.preventDefault();
 
-        gsap.to(window, {
-          duration: 0.8,
-          scrollTo: {
-            y: targetMapSection,
-            offsetY: 80,
-          },
-          ease: "power1.inOut",
-        });
+        const targetId = routeBtn.dataset.scrollTo;
+        const targetMapSection = document.querySelector(targetId);
+
+        if (targetMapSection) {
+          closeMenu();
+          gsap.to(window, {
+            duration: 0.8,
+            scrollTo: {
+              y: targetMapSection,
+              offsetY: 80,
+            },
+            ease: "power1.inOut",
+          });
+        }
       }
     });
   }

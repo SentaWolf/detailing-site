@@ -177,7 +177,7 @@
 
   &__label {
     color: $cream;
-    font-weight: $semi-bold;
+    font-weight: $medium;
     font-size: 16px;
   }
 
@@ -302,7 +302,13 @@
     color: $light-green;
   }
 
-  &__phone {
+  &__address-data {
+    font-style: normal;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    gap: 24px;
   }
 
   &__socials {
@@ -447,50 +453,27 @@
   }
 }
 
-.contacts-map {
-  background-color: $bg-main;
-  width: 100%;
-  padding-top: 64px;
-
-  &__map {
-    width: 100%;
-    height: 420px;
-    border-top: 1px solid rgba($dark-green, 0.3);
-    border-bottom: 1px solid rgba($dark-green, 0.3);
-    background-color: $bg-main;
-    position: relative;
-    overflow: hidden;
-  }
-
-  &__address {
-    @include container-base;
-    padding-inline: 16px;
-    font-size: 20px;
-    font-weight: $medium;
-    color: white;
-    text-align: right;
-    font-style: normal;
-    margin-bottom: 16px;
-
-    a {
-      text-decoration: underline;
-      text-decoration-color: transparent;
-      text-decoration-thickness: 1px;
-      transition: text-decoration-color 0.3s ease-in;
-
-      @media (hover: hover) {
-        &:hover {
-          text-decoration-color: white;
-        }
-      }
-    }
-  }
-}
-
 .footer {
+  position: relative;
   width: 100%;
   padding: 32px 16px 64px 16px;
-  border-bottom: 4px solid $dark-green;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 10px;
+
+    background: linear-gradient(
+      to right,
+      $dark-green 0%,
+      $light-green 30%,
+      $dark-blue 100%
+    );
+  }
+
   &__container {
     @include container-base;
     color: $dark-green;

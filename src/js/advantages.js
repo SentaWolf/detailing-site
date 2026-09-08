@@ -253,10 +253,17 @@ export function initAdvantagesSlider() {
         const btnEl = slide.querySelector(".card-desc__btn");
         if (!textEl || !btnEl) return;
 
+        textEl.style.webkitLineClamp = "unset";
+        textEl.style.maxHeight = "unset";
+
         btnEl.style.display = "none";
+
         if (textEl.scrollHeight > allowedTextMaxHeight) {
           btnEl.style.display = "inline-block";
         }
+
+        textEl.style.webkitLineClamp = "";
+        textEl.style.maxHeight = "";
       });
     });
   }

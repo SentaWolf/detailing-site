@@ -710,10 +710,9 @@
       overflow: hidden;
       word-break: break-word;
       white-space: pre-line;
-      -webkit-line-clamp: var(--desc-clamp, 3);
-      max-height: calc(var(--desc-clamp, 3) * var(--desc-line-height, 1.3em));
-
-      line-height: var(--desc-line-height, 1.3em);
+      -webkit-line-clamp: var(--desc-clamp, 4);
+      max-height: calc(var(--desc-clamp, 4) * var(--desc-line-height, 1.3em));
+      text-overflow: ellipsis;
 
       @media screen and (max-width: $breakpoint-md),
         screen and (max-height: 680px) {
