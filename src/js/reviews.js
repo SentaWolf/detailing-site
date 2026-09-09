@@ -11,9 +11,16 @@ export function initReviewsSlider() {
   const allCards = Array.from(reviewsBlock.querySelectorAll(".reviews__card"));
   if (allCards.length === 0) return;
 
-  const FIXED_CARD_WIDTH = 376;
   const FIXED_GAP = 24;
   const SWIPE_THRESHOLD = 40;
+  const CARD_WIDTH_DESKTOP = 376;
+  const CARD_WIDTH_MOBILE = 288;
+  const MAX_TEXT_HEIGHT_DESKTOP = 164;
+  const MAX_TEXT_HEIGHT_MOBILE = 270;
+
+  function getCurrentCardWidth() {
+    return window.innerWidth < 768 ? CARD_WIDTH_MOBILE : CARD_WIDTH_DESKTOP;
+  }
 
   let currentIndex = 0;
   let activeReviewsTween = null;
@@ -66,8 +73,7 @@ export function initReviewsSlider() {
     currentIndex = targetIndex;
     updateNavButtons();
 
-    const currentCardWidth = window.innerWidth < 768 ? 288 : 376;
-    const stepWidth = currentCardWidth + FIXED_GAP;
+    const stepWidth = getCurrentCardWidth() + FIXED_GAP;
     const targetX = targetIndex * stepWidth;
 
     activeReviewsTween = gsap.to(track, {
@@ -215,8 +221,7 @@ export function initReviewsSlider() {
     if (!isTrackDragging) return;
     trackMovedX = clientX - trackStartX;
 
-    const currentCardWidth = window.innerWidth < 768 ? 288 : 376;
-    const currentStepWidth = currentCardWidth + FIXED_GAP;
+    const currentStepWidth = getCurrentCardWidth() + FIXED_GAP;
 
     const baseTranslateX = -(currentIndex * currentStepWidth);
     gsap.set(track, { x: baseTranslateX + trackMovedX * 0.4 });
@@ -270,7 +275,9 @@ export function initReviewsSlider() {
       btnEl.style.display = "none";
 
       const isMobileWidth = window.innerWidth < 768;
-      const maxAllowedHeight = isMobileWidth ? 270 : 164;
+      const maxAllowedHeight = isMobileWidth
+        ? MAX_TEXT_HEIGHT_MOBILE
+        : MAX_TEXT_HEIGHT_DESKTOP;
 
       if (textEl.scrollHeight > maxAllowedHeight) {
         btnEl.style.display = "block";

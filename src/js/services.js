@@ -113,7 +113,7 @@ export function initServicesCatalog() {
   }
 
   // 4.ОКНО ПОП-АПА
-  // =======================================================
+
   const popup = document.getElementById("servicesPopup");
   const popupImage = document.getElementById("popupServicesImage");
   const popupPrice = document.getElementById("popupServicesPrice");

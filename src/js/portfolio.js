@@ -43,8 +43,8 @@ export function initPortfolioAmbientLight() {
   }
 
   gsap.to(wheel, {
-    rotate: "random(12, 18)",
-    duration: "random(12, 16)",
+    rotate: () => gsap.utils.random(12, 18),
+    duration: () => gsap.utils.random(12, 16),
     repeat: -1,
     yoyo: true,
     ease: "sine.inOut",
@@ -444,8 +444,6 @@ export function initPortfolioSlider() {
     if (touchEndX - touchStartX > swipeThreshold) movePrev();
   }
 
-  // Оставляем ТОЛЬКО упругий сдвиг рельса, чтобы слайды не съезжали.
-  // Функцию checkPortfolioTextTruncation отсюда ПОЛНОСТЬЮ стёрли!
   window.addEventListener("resize", () => {
     if (track && slides[currentIndex]) {
       const slideWidth = slides[0].clientWidth;
