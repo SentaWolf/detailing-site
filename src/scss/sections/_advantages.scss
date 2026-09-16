@@ -22,7 +22,7 @@
   background-color: $bg-main;
   background-image:
     linear-gradient(rgba($bg-main, 0.3), rgba($bg-main, 0.3)),
-    url("/src/assets/images/advantages-bubles.jpg");
+    url("../../images/advantages-bubles.webp");
   background-repeat: no-repeat;
   background-position: top left;
   background-size: auto min(100vh, 960px);
@@ -153,6 +153,11 @@
     backdrop-filter: blur(4px) brightness(1.1);
     -webkit-backdrop-filter: blur(4px) brightness(1.1);
 
+    @media (hover: none), (pointer: coarse) {
+      backdrop-filter: none;
+      background-color: rgba($dark-blue, 0.5);
+    }
+
     @include media-max($breakpoint-md) {
       padding: 8px;
       padding-top: 16px;
@@ -239,7 +244,7 @@
       aspect-ratio: 1 / 1;
       border-radius: 50%;
       background-color: rgba(255, 255, 255, 0.1);
-      background-image: url("/src/assets/icons/card-small-icon.svg");
+      background-image: url("../../icons/card-small-icon.svg");
       background-repeat: no-repeat;
       background-position: center;
       background-size: contain;
@@ -282,6 +287,11 @@
       backdrop-filter: blur(4px);
       border: 1px solid rgba($cream, 0.25);
       border-radius: 8px;
+
+      @media (hover: none), (pointer: coarse) {
+        backdrop-filter: none;
+        background-color: rgba($bg-main, 0.7);
+      }
 
       -webkit-mask-image: radial-gradient(
         circle,
@@ -394,11 +404,12 @@
       screen and (max-height: 680px) {
       aspect-ratio: auto;
       flex-direction: column;
-      height: 90vh;
+      height: 80vh;
       width: 100%;
 
       &::before {
         display: none;
+        animation: none;
       }
     }
 
@@ -445,8 +456,8 @@
       width: 24px;
       height: 24px;
       background-color: $bg-main;
-      -webkit-mask-image: url("/src/assets/icons/show-more.svg");
-      mask-image: url("/src/assets/icons/show-more.svg");
+      -webkit-mask-image: url("../../icons/show-more.svg");
+      mask-image: url("../../icons/show-more.svg");
       mask-position: center;
       mask-repeat: no-repeat;
       mask-size: contain;
@@ -506,7 +517,7 @@
 
       @media screen and (max-width: $breakpoint-md),
         screen and (max-height: 680px) {
-        grid-template-rows: 1fr 72vh;
+        grid-template-rows: 1fr 80%;
         justify-items: center;
         flex-basis: initial;
         flex-shrink: initial;
@@ -603,10 +614,10 @@
       cursor: pointer;
 
       &.prev {
-        background-image: url("/src/assets/icons/arrow-prev.svg");
+        background-image: url("../../icons/arrow-prev.svg");
       }
       &.next {
-        background-image: url("/src/assets/icons/arrow-next.svg");
+        background-image: url("../../icons/arrow-next.svg");
       }
 
       @media (hover: hover) {
@@ -666,8 +677,8 @@
       border-radius: 0 24px 24px 0;
       padding: 24px;
       background-image:
-        url("/src/assets/images/bubles-top-left.png"),
-        url("/src/assets/images/bubles-bottom-right.png");
+        url("../../images/bubles-top-left.webp"),
+        url("../../images/bubles-bottom-right.webp");
       background-repeat: no-repeat, no-repeat;
       background-size:
         40% auto,

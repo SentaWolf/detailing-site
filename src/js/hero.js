@@ -109,6 +109,11 @@ export function initHeroParallax() {
   const heroBlock = document.querySelector(".hero");
   if (!heroBlock) return;
 
+  const isTouchDevice = window.matchMedia(
+    "(hover: none), (pointer: coarse)",
+  ).matches;
+  if (isTouchDevice) return;
+
   const layerBg = heroBlock.querySelector(".layer-bg");
   const layerLines = heroBlock.querySelector(".layer-lines");
   const layerFront = heroBlock.querySelector(".layer-front");
@@ -157,6 +162,10 @@ export function animateHeroLinesOnLoad() {
   const allLines = layerLines.querySelectorAll(".line");
   if (allLines.length === 0) return;
 
+  const isMobile = window.matchMedia(
+    "(hover: none), (pointer: coarse)",
+  ).matches;
+
   gsap.set(allLines, {
     y: "-150vh",
     opacity: 0,
@@ -169,10 +178,53 @@ export function animateHeroLinesOnLoad() {
     opacity: 1,
     duration: 1.8,
     ease: "elastic.out(1, 0.6)",
-
     stagger: {
       each: 0.15,
       from: "start",
     },
   });
+
+  // На мобильных — после появления запускаем постоянные «прыжки»
+  if (isMobile) {
+    tl.then(() => {
+      // Сохраняем все tween'ы
+      const jumpTweens = [];
+
+      allLines.forEach((line, index) => {
+        const tween = gsap.to(line, {
+          y: "+=30",
+          duration: 0.6 + Math.random() * 0.4,
+          delay: index * 0.1,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+          paused: true, // ← стартуем на паузе
+        });
+        jumpTweens.push(tween);
+      });
+
+      // Запускаем/останавливаем по видимости
+      const heroBlock = document.querySelector(".hero");
+      if (!heroBlock) return;
+
+      let isPlaying = false;
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && !isPlaying) {
+              jumpTweens.forEach((t) => t.play());
+              isPlaying = true;
+            } else if (!entry.isIntersecting && isPlaying) {
+              jumpTweens.forEach((t) => t.pause());
+              isPlaying = false;
+            }
+          });
+        },
+        { threshold: 0 },
+      );
+
+      observer.observe(heroBlock);
+    });
+  }
 }

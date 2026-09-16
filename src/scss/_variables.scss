@@ -16,7 +16,6 @@ $font-main: "Montserrat", sans-serif;
 $font-alt: "Inter", sans-serif;
 $font-title-alt: "Montserrat Alternates", sans-serif;
 
-$thin: 100;
 $light: 300;
 $regular: 400;
 $medium: 500;
@@ -55,6 +54,10 @@ $bold: 700;
     0 0 20px 5px $color;
 
   animation: linesNeonPulse $duration ease-in-out infinite alternate;
+
+  @media (hover: none), (pointer: coarse) {
+    animation: none;
+  }
 }
 
 $breakpoint-xxl: 1400px;
@@ -86,6 +89,11 @@ $breakpoint-sm: 576px;
   -webkit-backdrop-filter: blur($blur);
   box-shadow: 0 0 16px 2px $bg;
   filter: blur(2px);
+
+  @media (hover: none), (pointer: coarse) {
+    backdrop-filter: none;
+    filter: none;
+  }
 }
 
 @mixin beam-star-style(

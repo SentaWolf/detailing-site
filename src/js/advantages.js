@@ -2,7 +2,7 @@ import { gsap } from "gsap";
 
 export function initTextCarousel() {
   const slides = document.querySelectorAll(".card-small__slide");
-  if (slides.length < 2) return;
+  if (!slides.length) return;
 
   let slidesArray = Array.from(slides);
 
@@ -60,12 +60,23 @@ export function initTextCarousel() {
   }
 
   applyClasses();
-  setInterval(rotateStack, 6000);
+
+  if (slidesArray.length >= 2) {
+    setInterval(rotateStack, 6000);
+  }
 }
 
 export function initAmbientBubbles() {
   const ambientContainer = document.getElementById("advantagesBubblesAmbient");
   if (!ambientContainer) return;
+
+  const isMobile = window.matchMedia(
+    "(hover: none), (pointer: coarse), (max-width: 1024px)",
+  ).matches;
+  if (isMobile) {
+    ambientContainer.style.display = "none";
+    return;
+  }
 
   const TOTAL_BUBBLES = 30;
 
@@ -79,7 +90,17 @@ export function initAmbientBubbles() {
     { className: "ambient-bubble--type-7", baseSpeed: 24 },
   ];
 
+  // Флаги видимости и «живости» блока
+  let isVisible = true;
+  let isRunning = true;
+
+  // Хранилище активных tween'ов, чтобы останавливать/запускать их
+  const activeTweens = new Map(); // key: bubble element, value: tween
+
   function createSingleBubble() {
+    // Если блок не виден или остановлен — новые пузырьки не создаём
+    if (!isVisible || !isRunning) return;
+
     const bubble = document.createElement("div");
 
     const randomType =
@@ -96,21 +117,152 @@ export function initAmbientBubbles() {
       y: `${randomTop}vh`,
     });
 
-    gsap.to(bubble, {
+    const tween = gsap.to(bubble, {
       x: "110vw",
       duration: duration,
       ease: "none",
+      paused: !isVisible, // ← стартуем на паузе, если блок не виден
       onComplete: () => {
+        activeTweens.delete(bubble);
         bubble.remove();
         createSingleBubble();
       },
     });
+
+    activeTweens.set(bubble, tween);
   }
 
+  // Стартовый запуск
   for (let i = 0; i < TOTAL_BUBBLES; i++) {
     setTimeout(() => {
       createSingleBubble();
     }, i * 1200);
+  }
+
+  // Останавливаем/запускаем по видимости
+  const advantagesBlock = document.querySelector(".advantages");
+  if (!advantagesBlock) return;
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        isVisible = entry.isIntersecting;
+
+        if (isVisible) {
+          // Возобновляем все активные пузырьки
+          activeTweens.forEach((tween) => tween.play());
+          // Запускаем создание новых
+          if (!isRunning) {
+            isRunning = true;
+            createSingleBubble();
+          }
+        } else {
+          // Ставим на паузу все летящие пузырьки
+          activeTweens.forEach((tween) => tween.pause());
+        }
+      });
+    },
+    { threshold: 0 },
+  );
+
+  observer.observe(advantagesBlock);
+}
+
+export function initAdvantagesTextClamp() {
+  const cardDescBlock = document.querySelector(".card-desc");
+  if (!cardDescBlock) return;
+
+  const descSlides = Array.from(
+    cardDescBlock.querySelectorAll(".card-desc__slider"),
+  );
+  if (!descSlides.length) return;
+
+  const FALLBACK_FONT_SIZE_DESC = 16;
+  const FALLBACK_LINE_HEIGHT = 1.3;
+  const SUBPIXEL_BUFFER = 2;
+
+  function checkAllDescButtonsVisibility() {
+    const baseSlide = descSlides[0];
+    if (!baseSlide) return;
+
+    const sampleText = baseSlide.querySelector(".card-desc__text");
+    const contentContainer =
+      baseSlide.querySelector(".card-desc__content") || baseSlide;
+    if (!sampleText || !contentContainer) return;
+
+    sampleText.style.webkitLineClamp = "unset";
+    sampleText.style.maxHeight = "unset";
+
+    requestAnimationFrame(() => {
+      const cardDescTextHeight = contentContainer.clientHeight;
+
+      const computedTextStyle = window.getComputedStyle(sampleText);
+      const fontSize =
+        parseFloat(computedTextStyle.fontSize) || FALLBACK_FONT_SIZE_DESC;
+      const lineHeightVal = computedTextStyle.lineHeight;
+      const parsedLineHeight = parseFloat(lineHeightVal);
+
+      const descTextLineHeight = lineHeightVal.includes("px")
+        ? parseFloat(lineHeightVal)
+        : fontSize *
+          (!isNaN(parsedLineHeight) ? parsedLineHeight : FALLBACK_LINE_HEIGHT);
+
+      const safeHeight = cardDescTextHeight - SUBPIXEL_BUFFER;
+      let possibleLines = Math.floor(safeHeight / descTextLineHeight);
+      const clampLimitWithBtn = Math.max(1, possibleLines - 1);
+
+      if (possibleLines > 0) {
+        cardDescBlock.style.setProperty("--desc-clamp", clampLimitWithBtn);
+        cardDescBlock.style.setProperty(
+          "--desc-line-height",
+          `${descTextLineHeight}px`,
+        );
+      }
+
+      const allowedTextMaxHeight = clampLimitWithBtn * descTextLineHeight;
+
+      descSlides.forEach((slide) => {
+        const textEl = slide.querySelector(".card-desc__text");
+        const btnEl = slide.querySelector(".card-desc__btn");
+        if (!textEl || !btnEl) return;
+
+        textEl.style.webkitLineClamp = "unset";
+        textEl.style.maxHeight = "unset";
+
+        btnEl.style.display = "none";
+
+        if (textEl.scrollHeight > allowedTextMaxHeight) {
+          btnEl.style.display = "inline-block";
+        }
+
+        textEl.style.webkitLineClamp = "";
+        textEl.style.maxHeight = "";
+      });
+    });
+  }
+
+  checkAllDescButtonsVisibility();
+
+  if (window.ResizeObserver) {
+    const resizeObserver = new ResizeObserver(() => {
+      checkAllDescButtonsVisibility();
+    });
+
+    descSlides.forEach((slide) => resizeObserver.observe(slide));
+  }
+
+  const orientationQuery = window.matchMedia("(orientation: landscape)");
+
+  function handleOrientationChange() {
+    setTimeout(() => {
+      checkAllDescButtonsVisibility();
+    }, 150);
+  }
+
+  if (orientationQuery.addEventListener) {
+    orientationQuery.addEventListener("change", handleOrientationChange);
+  } else {
+    orientationQuery.addListener(handleOrientationChange);
   }
 }
 
@@ -127,18 +279,24 @@ export function initAdvantagesSlider() {
   );
   if (mainSlides.length < 2 || descSlides.length < 2) return;
 
+  const isMobile = window.matchMedia(
+    "(hover: none), (pointer: coarse)",
+  ).matches;
+
   const FALLBACK_FONT_SIZE_MAIN = 20;
-  const FALLBACK_FONT_SIZE_DESC = 16;
   const FALLBACK_LINE_HEIGHT = 1.3;
   const NAV_FIXED_HEIGHT = 48;
   const SUBPIXEL_BUFFER = 2;
-  const SWIPE_THRESHOLD = 50;
+  const SWIPE_THRESHOLD = isMobile ? 80 : 50;
+  const TIME_SCALE = isMobile ? 1.8 : 1;
 
   let currentIndex = 0;
   let activeTimeline = null;
   const showMoreBtn = document.querySelector(".advantages__btn-show-more");
   let touchStartX = 0;
+  let touchStartY = 0;
   let touchEndX = 0;
+  let touchEndY = 0;
 
   function checkAllMainHeadingsTruncation() {
     const baseSlide = mainSlides[0];
@@ -205,66 +363,6 @@ export function initAdvantagesSlider() {
           `${lineHeight}px`,
         );
       }
-    });
-  }
-
-  function checkAllDescButtonsVisibility() {
-    const baseSlide = descSlides[0];
-    if (!baseSlide) return;
-
-    const sampleText = baseSlide.querySelector(".card-desc__text");
-    const contentContainer =
-      baseSlide.querySelector(".card-desc__content") || baseSlide;
-    if (!sampleText || !contentContainer) return;
-
-    sampleText.style.webkitLineClamp = "unset";
-    sampleText.style.maxHeight = "unset";
-
-    requestAnimationFrame(() => {
-      const cardDescTextHeight = contentContainer.clientHeight;
-
-      const computedTextStyle = window.getComputedStyle(sampleText);
-      const fontSize =
-        parseFloat(computedTextStyle.fontSize) || FALLBACK_FONT_SIZE_DESC;
-      const lineHeightVal = computedTextStyle.lineHeight;
-      const parsedLineHeight = parseFloat(lineHeightVal);
-
-      const descTextLineHeight = lineHeightVal.includes("px")
-        ? parseFloat(lineHeightVal)
-        : fontSize *
-          (!isNaN(parsedLineHeight) ? parsedLineHeight : FALLBACK_LINE_HEIGHT);
-
-      const safeHeight = cardDescTextHeight - SUBPIXEL_BUFFER;
-      let possibleLines = Math.floor(safeHeight / descTextLineHeight);
-      const clampLimitWithBtn = Math.max(1, possibleLines - 1);
-
-      if (possibleLines > 0) {
-        cardDescBlock.style.setProperty("--desc-clamp", clampLimitWithBtn);
-        cardDescBlock.style.setProperty(
-          "--desc-line-height",
-          `${descTextLineHeight}px`,
-        );
-      }
-
-      const allowedTextMaxHeight = clampLimitWithBtn * descTextLineHeight;
-
-      descSlides.forEach((slide) => {
-        const textEl = slide.querySelector(".card-desc__text");
-        const btnEl = slide.querySelector(".card-desc__btn");
-        if (!textEl || !btnEl) return;
-
-        textEl.style.webkitLineClamp = "unset";
-        textEl.style.maxHeight = "unset";
-
-        btnEl.style.display = "none";
-
-        if (textEl.scrollHeight > allowedTextMaxHeight) {
-          btnEl.style.display = "inline-block";
-        }
-
-        textEl.style.webkitLineClamp = "";
-        textEl.style.maxHeight = "";
-      });
     });
   }
 
@@ -392,6 +490,10 @@ export function initAdvantagesSlider() {
       },
     });
 
+    if (isMobile) {
+      activeTimeline.timeScale(TIME_SCALE);
+    }
+
     if (currentHeading)
       activeTimeline.to(
         currentHeading,
@@ -453,6 +555,86 @@ export function initAdvantagesSlider() {
     if (e.target.classList.contains("prev")) movePrev();
   });
 
+  [cardMainBlock, cardDescBlock].forEach((block) => {
+    block.addEventListener(
+      "touchstart",
+      (e) => {
+        if (e.changedTouches && e.changedTouches[0]) {
+          touchStartX = e.changedTouches[0].screenX;
+          touchStartY = e.changedTouches[0].screenY;
+        }
+      },
+      { passive: true },
+    );
+
+    block.addEventListener(
+      "touchend",
+      (e) => {
+        if (!e.changedTouches || !e.changedTouches[0]) return;
+
+        touchEndX = e.changedTouches[0].screenX;
+        touchEndY = e.changedTouches[0].screenY;
+
+        const deltaX = Math.abs(touchStartX - touchEndX);
+        const deltaY = Math.abs(touchStartY - touchEndY);
+
+        // Если свайп больше вертикальный — не переключаем слайд
+        if (deltaY > deltaX) return;
+
+        if (deltaX < SWIPE_THRESHOLD) return;
+
+        if (touchStartX - touchEndX > 0) {
+          moveNext();
+        } else {
+          movePrev();
+        }
+      },
+      { passive: true },
+    );
+  });
+
+  updateStackLayers();
+  checkAllMainHeadingsTruncation();
+
+  if (window.ResizeObserver) {
+    const resizeObserver = new ResizeObserver(() => {
+      checkAllMainHeadingsTruncation();
+    });
+
+    mainSlides.forEach((slide) => resizeObserver.observe(slide));
+    descSlides.forEach((slide) => resizeObserver.observe(slide));
+  }
+
+  const orientationQuery = window.matchMedia("(orientation: landscape)");
+
+  function handleOrientationChange() {
+    setTimeout(() => {
+      checkAllMainHeadingsTruncation();
+    }, 150);
+  }
+
+  if (orientationQuery.addEventListener) {
+    orientationQuery.addEventListener("change", handleOrientationChange);
+  } else {
+    orientationQuery.addListener(handleOrientationChange);
+  }
+}
+
+export function initAdvantagesPopup() {
+  const cardMainBlock = document.querySelector(".card-main");
+  const cardDescBlock = document.querySelector(".card-desc");
+  if (!cardMainBlock || !cardDescBlock) return;
+
+  const mainSlides = Array.from(
+    cardMainBlock.querySelectorAll(".card-main__slide"),
+  );
+  const descSlides = Array.from(
+    cardDescBlock.querySelectorAll(".card-desc__slider"),
+  );
+  if (!mainSlides.length || !descSlides.length) return;
+
+  const showMoreBtn = document.querySelector(".advantages__btn-show-more");
+
   const popup = document.getElementById("advantagesPopup");
   const popupTitle = popup
     ? popup.querySelector(".advantages-popup__title")
@@ -466,6 +648,7 @@ export function initAdvantagesSlider() {
   const popupOverlay = popup ? popup.querySelector(".popup__overlay") : null;
 
   let lastActiveElement = null;
+  let currentIndex = 0;
 
   function openPopup() {
     if (!popup || !popupTitle || !popupText) return;
@@ -526,62 +709,5 @@ export function initAdvantagesSlider() {
       cardDescBlock.classList.toggle("is-open");
       showMoreBtn.classList.toggle("is-active");
     });
-  }
-
-  function handleSwipe() {
-    if (touchStartX - touchEndX > SWIPE_THRESHOLD) moveNext();
-    if (touchEndX - touchStartX > SWIPE_THRESHOLD) movePrev();
-  }
-
-  [cardMainBlock, cardDescBlock].forEach((block) => {
-    block.addEventListener(
-      "touchstart",
-      (e) => {
-        if (e.changedTouches && e.changedTouches[0]) {
-          touchStartX = e.changedTouches[0].screenX;
-        }
-      },
-      { passive: true },
-    );
-
-    block.addEventListener(
-      "touchend",
-      (e) => {
-        if (e.changedTouches && e.changedTouches[0]) {
-          touchEndX = e.changedTouches[0].screenX;
-          handleSwipe();
-        }
-      },
-      { passive: true },
-    );
-  });
-
-  updateStackLayers();
-  checkAllMainHeadingsTruncation();
-  checkAllDescButtonsVisibility();
-
-  if (window.ResizeObserver) {
-    const resizeObserver = new ResizeObserver(() => {
-      checkAllMainHeadingsTruncation();
-      checkAllDescButtonsVisibility();
-    });
-
-    mainSlides.forEach((slide) => resizeObserver.observe(slide));
-    descSlides.forEach((slide) => resizeObserver.observe(slide));
-  }
-
-  const orientationQuery = window.matchMedia("(orientation: landscape)");
-
-  function handleOrientationChange() {
-    setTimeout(() => {
-      checkAllMainHeadingsTruncation();
-      checkAllDescButtonsVisibility();
-    }, 150);
-  }
-
-  if (orientationQuery.addEventListener) {
-    orientationQuery.addEventListener("change", handleOrientationChange);
-  } else {
-    orientationQuery.addListener(handleOrientationChange);
   }
 }

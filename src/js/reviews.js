@@ -4,6 +4,12 @@ export function initReviewsSlider() {
   const reviewsBlock = document.querySelector(".reviews");
   if (!reviewsBlock) return;
 
+  const isMobile = window.matchMedia(
+    "(hover: none), (pointer: coarse)",
+  ).matches;
+  const ANIM_DURATION = isMobile ? 0.5 : 0.8;
+  const SWIPE_THRESHOLD = isMobile ? 70 : 40;
+
   const track = reviewsBlock.querySelector(".reviews__track");
   const prevBtn = reviewsBlock.querySelector(".reviews__arrow-btn.prev");
   const nextBtn = reviewsBlock.querySelector(".reviews__arrow-btn.next");
@@ -12,7 +18,6 @@ export function initReviewsSlider() {
   if (allCards.length === 0) return;
 
   const FIXED_GAP = 24;
-  const SWIPE_THRESHOLD = 40;
   const CARD_WIDTH_DESKTOP = 376;
   const CARD_WIDTH_MOBILE = 288;
   const MAX_TEXT_HEIGHT_DESKTOP = 164;
@@ -27,7 +32,9 @@ export function initReviewsSlider() {
 
   let isTrackDragging = false;
   let trackStartX = 0;
+  let trackStartY = 0;
   let trackMovedX = 0;
+  let trackMovedY = 0;
 
   function getStepCardsCount() {
     const width = window.innerWidth;
@@ -78,7 +85,7 @@ export function initReviewsSlider() {
 
     activeReviewsTween = gsap.to(track, {
       x: -targetX,
-      duration: 0.8,
+      duration: ANIM_DURATION,
       ease: "expo.out",
       onComplete: () => {
         activeReviewsTween = null;
@@ -108,7 +115,7 @@ export function initReviewsSlider() {
       });
   }
 
-  //////////////////////////////////////////////////////
+  // === ПОП-АП ===
   const popup = document.getElementById("reviewsPopup");
   const popupAuthor = document.getElementById("popupReviewsAuthor");
   const popupStarsContainer = popup
@@ -197,7 +204,6 @@ export function initReviewsSlider() {
     if (!parentCard) return;
 
     lastActiveReviewsElement = moreBtn;
-
     openReviewsPopup(parentCard);
   });
 
@@ -209,20 +215,22 @@ export function initReviewsSlider() {
       closeReviewsPopup();
     }
   });
-  ////////////////////////////////////////////////////////////
 
-  function startTrackDrag(clientX) {
+  // === СВАЙПЫ ===
+  function startTrackDrag(clientX, clientY) {
     isTrackDragging = true;
     trackStartX = clientX;
+    trackStartY = clientY;
     trackMovedX = 0;
+    trackMovedY = 0;
   }
 
-  function moveTrackDrag(clientX) {
+  function moveTrackDrag(clientX, clientY) {
     if (!isTrackDragging) return;
     trackMovedX = clientX - trackStartX;
+    trackMovedY = clientY - trackStartY;
 
     const currentStepWidth = getCurrentCardWidth() + FIXED_GAP;
-
     const baseTranslateX = -(currentIndex * currentStepWidth);
     gsap.set(track, { x: baseTranslateX + trackMovedX * 0.4 });
   }
@@ -231,39 +239,59 @@ export function initReviewsSlider() {
     if (!isTrackDragging) return;
     isTrackDragging = false;
 
-    // Если сдвинули сильнее порога — перелистываем пачку, иначе — возвращаем на место
-    if (trackMovedX < -SWIPE_THRESHOLD) {
-      moveNext();
-    } else if (trackMovedX > SWIPE_THRESHOLD) {
-      movePrev();
-    } else {
+    const deltaX = Math.abs(trackMovedX);
+    const deltaY = Math.abs(trackMovedY);
+
+    if (deltaY > deltaX) return;
+    if (deltaX < SWIPE_THRESHOLD) {
       goToCard(currentIndex);
+      return;
+    }
+
+    if (trackMovedX < 0) {
+      moveNext();
+    } else {
+      movePrev();
     }
   }
 
   track.addEventListener("mousedown", (e) => {
-    // Игнорируем запуск драга, если кликнули по интерактивной кнопке внутри отзыва
     if (e.target.closest("button") || e.target.closest("a")) return;
     e.preventDefault();
-    startTrackDrag(e.clientX);
+    startTrackDrag(e.clientX, e.clientY);
   });
-  window.addEventListener("mousemove", (e) => moveTrackDrag(e.clientX));
+  window.addEventListener("mousemove", (e) =>
+    moveTrackDrag(e.clientX, e.clientY),
+  );
   window.addEventListener("mouseup", endTrackDrag);
 
   track.addEventListener(
     "touchstart",
     (e) => {
-      if (e.touches && e.touches[0]) startTrackDrag(e.touches[0].clientX);
+      if (e.touches && e.touches[0]) {
+        startTrackDrag(e.touches[0].clientX, e.touches[0].clientY);
+      }
     },
     { passive: true },
   );
+
   track.addEventListener(
     "touchmove",
     (e) => {
-      if (e.touches && e.touches[0]) moveTrackDrag(e.touches[0].clientX);
+      if (!isTrackDragging || !e.touches || !e.touches[0]) return;
+
+      const dx = Math.abs(e.touches[0].clientX - trackStartX);
+      const dy = Math.abs(e.touches[0].clientY - trackStartY);
+
+      // Если свайп больше вертикальный — не блокируем скролл страницы
+      if (dy > dx) return;
+
+      e.preventDefault();
+      moveTrackDrag(e.touches[0].clientX, e.touches[0].clientY);
     },
-    { passive: true },
+    { passive: false },
   );
+
   track.addEventListener("touchend", endTrackDrag);
 
   function checkReviewsButtonsVisibility() {

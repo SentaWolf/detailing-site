@@ -1,0 +1,270 @@
+@use "../variables" as *;
+
+.gallery {
+  overflow-x: hidden;
+  position: relative;
+  width: 100%;
+  height: auto;
+  min-height: 100vh;
+  @include flex($justify: center, $align: stretch);
+  padding: 120px 16px;
+  background-color: $bg-main;
+  overflow: hidden;
+
+  &__container {
+    position: relative;
+    @include container-base;
+    @include flex(column, $justify: flex-start, $align: flex-start);
+  }
+
+  &__header {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 32px;
+    margin-bottom: 48px;
+  }
+
+  &__title {
+    position: relative;
+    z-index: 1;
+    font-size: 48px;
+    font-weight: $bold;
+    text-transform: uppercase;
+    color: white;
+
+    @media screen and (max-width: 360px) {
+      font-size: 42px;
+    }
+
+    &::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      font-size: 48px;
+      font-weight: $bold;
+      color: transparent;
+      -webkit-text-stroke: 1px white;
+      text-stroke: 1px white;
+      transform: translate(-5px, 0);
+      z-index: -1;
+      pointer-events: none;
+
+      @media screen and (max-width: 360px) {
+        font-size: 42px;
+      }
+    }
+  }
+
+  &__nav {
+    @include flex();
+    gap: 64px;
+    width: fit-content;
+
+    @media screen and (max-width: $breakpoint-sm) {
+      display: none;
+      visibility: hidden;
+      opacity: 0;
+    }
+  }
+
+  &__arrow-btn {
+    border: 1px solid $dark-green;
+    border-radius: 4px;
+    aspect-ratio: 1 / 1;
+    width: 52px;
+    background-color: rgba($dark-green, 0.5);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;
+    transition:
+      background-color 0.3s ease,
+      box-shadow 0.3s ease,
+      transform 0.1s ease;
+
+    &.is-disabled {
+      opacity: 0.8;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        background-color: rgba($dark-green, 0.8);
+        box-shadow: inset 0 0 4px 0 $light-blue;
+      }
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    &--left {
+      background-image: url("../../icons/chevron-left.svg");
+    }
+    &--right {
+      background-image: url("../../icons/chevron-right.svg");
+    }
+  }
+
+  &__slider {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    width: 100%;
+  }
+
+  &__track {
+    @include flex(
+      column,
+      $justify: flex-start,
+      $wrap: wrap,
+      $align: flex-start,
+      $content: flex-start
+    );
+    align-self: center;
+    height: 600px;
+    width: auto;
+    will-change: transform;
+    touch-action: pan-y;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+
+    @media screen and (max-height: $breakpoint-sm) {
+      height: 280px;
+    }
+  }
+
+  &__card {
+    width: 400px;
+    height: 50%;
+    border: 1px solid rgba(white, 0.3);
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+
+    @media screen and (max-width: 432px) {
+      width: 288px;
+    }
+  }
+
+  .gallery__thumb-wrap,
+  .gallery__img,
+  .gallery__overlay {
+    width: 100%;
+    height: 100%;
+  }
+
+  .gallery__img {
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .gallery__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    mix-blend-mode: overlay;
+    transition: background-color 0.4s ease;
+  }
+
+  &__card:nth-child(4n + 1) .gallery__overlay,
+  &__card:nth-child(4n + 4) .gallery__overlay {
+    background-color: rgba(255, 255, 255, 0.3);
+
+    @media (hover: hover) {
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.5);
+      }
+    }
+  }
+  &__card:nth-child(4n + 2) .gallery__overlay,
+  &__card:nth-child(4n + 3) .gallery__overlay {
+    background-color: rgba(0, 0, 0, 0.3);
+
+    @media (hover: hover) {
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+    }
+  }
+
+  &__card:first-child .gallery__overlay {
+    background-color: rgba(255, 255, 255, 0.3);
+
+    @media (hover: hover) {
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.5);
+      }
+    }
+  }
+
+  &__card:nth-child(2) .gallery__overlay {
+    background-color: rgba(0, 0, 0, 0.3);
+
+    @media (hover: hover) {
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+    }
+  }
+
+  &__card {
+    @media (hover: hover) {
+      &:hover {
+        .gallery__img {
+          transform: scale(1.1);
+        }
+      }
+    }
+  }
+
+  &__call-to-action {
+    margin-block-start: 48px;
+    margin-block-end: 32px;
+    text-align: center;
+    font-family: $font-title-alt;
+    font-size: 24px;
+
+    @include media-max($breakpoint-lg) {
+      font-size: 20px;
+    }
+
+    @include media-max($breakpoint-md) {
+      font-size: 18px;
+    }
+    @include media-max($breakpoint-md) {
+      font-size: 16px;
+    }
+  }
+}
+
+.gallery-popup {
+  &__image {
+    border: 2px solid white;
+    width: 100%;
+    height: 432px;
+    object-fit: contain;
+    background-color: $cream;
+    margin-bottom: 32px;
+
+    @media screen and (max-height: $breakpoint-sm) {
+      height: 100%;
+    }
+  }
+
+  &__text {
+    text-align: center;
+    font-size: 18px;
+    font-weight: $regular;
+    line-height: 2;
+    word-spacing: 0.3em;
+    margin-bottom: 48px;
+  }
+}

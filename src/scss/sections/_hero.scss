@@ -25,7 +25,7 @@
       .layer-bg__img {
         z-index: 3;
         @include container-base;
-        background-image: url("/src/assets/images/car.jpg");
+        background-image: url("../../images/car.webp");
         height: 100%;
         background-repeat: no-repeat;
         background-position: center bottom;
@@ -78,31 +78,34 @@
         height: 100%;
         z-index: 4;
         pointer-events: none;
-        background-image: url("/src/assets/images/beams.png");
-        background-repeat: no-repeat;
-        background-position: center top;
-        background-size: 100% 85%;
         opacity: 0;
-        animation: heroAutoHeadlightFlicker 6s ease-in-out infinite;
         transition: opacity 0.4s ease;
 
-        @include media-max($breakpoint-xl) {
-          background-size: 130% 85%;
-        }
+        @media (hover: hover) {
+          background-image: url("../../images/beams.webp");
+          background-repeat: no-repeat;
+          background-position: center top;
+          background-size: 100% 85%;
+          animation: heroAutoHeadlightFlicker 6s ease-in-out infinite;
 
-        @include media-max($breakpoint-lg) {
-          top: 15%;
-          background-size: 140% 80%;
-        }
+          @include media-max($breakpoint-xl) {
+            background-size: 130% 85%;
+          }
 
-        @include media-max($breakpoint-md) {
-          top: 10%;
-          background-size: 150% 85%;
-        }
+          @include media-max($breakpoint-lg) {
+            top: 15%;
+            background-size: 140% 80%;
+          }
 
-        @include media-max($breakpoint-sm) {
-          top: 30%;
-          background-size: 200% 65%;
+          @include media-max($breakpoint-md) {
+            top: 10%;
+            background-size: 150% 85%;
+          }
+
+          @include media-max($breakpoint-sm) {
+            top: 30%;
+            background-size: 200% 65%;
+          }
         }
       }
 
@@ -131,11 +134,11 @@
         box-shadow:
           0 0 10px 3px $light-blue,
           0 0 20px 6px rgba($light-blue, 0.6);
-
         opacity: 0;
-        animation: heroFlySparks 7s linear infinite;
 
         @media (hover: hover) {
+          animation: heroFlySparks 7s linear infinite;
+
           &:nth-child(1) {
             left: 8%;
             width: 5px;
@@ -265,26 +268,28 @@
         pointer-events: none;
         position: relative;
         z-index: 1;
-        background-image: url("/src/assets/images/car-body.png");
         height: 100%;
         width: 100%;
         background-repeat: no-repeat;
         background-position: center bottom;
         background-size: cover;
-
+        background-image: none;
         grid-column: 1 / 2;
         grid-row: 1 / 2;
-
         transition:
           transform 0.6s cubic-bezier(0.25, 0.01, 1, 1),
           filter 0.5s ease-in-out;
+
+        @media (hover: hover) {
+          background-image: url("../../images/car-body.webp");
+        }
       }
 
       .car-lights {
         pointer-events: none;
         position: relative;
         z-index: 2;
-        background-image: url("/src/assets/images/car-lights.png");
+        background-image: url("../../images/car-lights.webp");
         height: 100%;
         width: 100%;
         background-repeat: no-repeat;
@@ -322,7 +327,7 @@
           height: auto;
           aspect-ratio: 1200 / 960;
           background-size: 130% auto;
-          animation: autoHeadlightFlicker 6s ease-in-out infinite !important;
+          animation: heroAutoHeadlightFlicker 6s ease-in-out infinite !important;
           filter: none !important;
         }
       }
@@ -493,7 +498,7 @@
             aspect-ratio: 16 / 19;
             height: 24px;
             flex-shrink: 0;
-            background-image: url("/src/assets/icons/arrow-down.svg");
+            background-image: url("../../icons/arrow-down.svg");
             background-repeat: no-repeat;
             background-position: center center;
             background-size: contain;

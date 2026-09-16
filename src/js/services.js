@@ -4,6 +4,12 @@ export function initServicesCatalog() {
   const servicesBlock = document.querySelector(".services");
   if (!servicesBlock) return;
 
+  const isMobile = window.matchMedia(
+    "(hover: none), (pointer: coarse)",
+  ).matches;
+  const ANIM_DURATION = isMobile ? 0.5 : 0.8;
+  const SWIPE_THRESHOLD = isMobile ? 80 : 40;
+
   const track = servicesBlock.querySelector(".services__track");
   const tabsContainer = servicesBlock.querySelector(".services__tabs");
   const prevBtn = servicesBlock.querySelector(".services__arrow-btn.prev");
@@ -14,9 +20,7 @@ export function initServicesCatalog() {
   );
   if (allCards.length === 0) return;
 
-  const FIXED_CARD_WIDTH = 280;
   const FIXED_GAP = 24;
-  const SWIPE_THRESHOLD = 40;
 
   let currentIndex = 0;
   let currentFilter = "all";
@@ -25,7 +29,9 @@ export function initServicesCatalog() {
 
   let isTrackDragging = false;
   let trackStartX = 0;
+  let trackStartY = 0;
   let trackMovedX = 0;
+  let trackMovedY = 0;
 
   function getStepCardsCount() {
     const width = window.innerWidth;
@@ -44,6 +50,10 @@ export function initServicesCatalog() {
     if (width > 992) return 3;
     if (width > 768) return 2;
     return 1;
+  }
+
+  function getCardWidth() {
+    return window.innerHeight <= 576 ? 464 : 280;
   }
 
   function updateNavButtons() {
@@ -76,13 +86,12 @@ export function initServicesCatalog() {
     currentIndex = targetIndex;
     updateNavButtons();
 
-    const cardWidth = window.innerHeight <= 576 ? 464 : 280;
-    const stepWidth = cardWidth + FIXED_GAP;
+    const stepWidth = getCardWidth() + FIXED_GAP;
     const targetX = targetIndex * stepWidth;
 
     activeServicesTween = gsap.to(track, {
       x: -targetX,
-      duration: 0.8,
+      duration: ANIM_DURATION,
       ease: "expo.out",
       onComplete: () => {
         activeServicesTween = null;
@@ -112,8 +121,7 @@ export function initServicesCatalog() {
       });
   }
 
-  // 4.ОКНО ПОП-АПА
-
+  // === ПОП-АП ===
   const popup = document.getElementById("servicesPopup");
   const popupImage = document.getElementById("popupServicesImage");
   const popupPrice = document.getElementById("popupServicesPrice");
@@ -143,7 +151,6 @@ export function initServicesCatalog() {
     }
     if (cardPrice) popupPrice.textContent = cardPrice.textContent;
     if (cardTitle) popupTitle.textContent = cardTitle.textContent;
-
     if (cardText) popupText.textContent = cardText.textContent;
 
     popup.classList.add("is-open");
@@ -181,7 +188,6 @@ export function initServicesCatalog() {
     if (!parentCard) return;
 
     lastActiveServicesElement = moreBtn;
-
     openServicesCatalogPopup(parentCard);
   });
 
@@ -196,6 +202,7 @@ export function initServicesCatalog() {
     }
   });
 
+  // === ФИЛЬТРЫ ===
   function filterCategory(filterValue) {
     currentFilter = filterValue;
     currentIndex = 0;
@@ -252,17 +259,22 @@ export function initServicesCatalog() {
     });
   }
 
-  function startTrackDrag(clientX) {
+  // === СВАЙПЫ ===
+  function startTrackDrag(clientX, clientY) {
     isTrackDragging = true;
     trackStartX = clientX;
+    trackStartY = clientY;
     trackMovedX = 0;
+    trackMovedY = 0;
   }
 
-  function moveTrackDrag(clientX) {
+  function moveTrackDrag(clientX, clientY) {
     if (!isTrackDragging) return;
+
     trackMovedX = clientX - trackStartX;
-    const cardWidth = window.innerHeight <= 576 ? 464 : 280;
-    const currentStepWidth = cardWidth + FIXED_GAP;
+    trackMovedY = clientY - trackStartY;
+
+    const currentStepWidth = getCardWidth() + FIXED_GAP;
     const baseTranslateX = -(currentIndex * currentStepWidth);
     gsap.set(track, { x: baseTranslateX + trackMovedX * 0.4 });
   }
@@ -271,39 +283,62 @@ export function initServicesCatalog() {
     if (!isTrackDragging) return;
     isTrackDragging = false;
 
-    if (trackMovedX < -SWIPE_THRESHOLD) {
-      moveNext();
-    } else if (trackMovedX > SWIPE_THRESHOLD) {
-      movePrev();
-    } else {
+    const deltaX = Math.abs(trackMovedX);
+    const deltaY = Math.abs(trackMovedY);
+
+    if (deltaY > deltaX) return; // вертикальный скролл — не листаем
+    if (deltaX < SWIPE_THRESHOLD) {
       goToCard(currentIndex);
+      return;
+    }
+
+    if (trackMovedX < 0) {
+      moveNext();
+    } else {
+      movePrev();
     }
   }
 
   track.addEventListener("mousedown", (e) => {
     if (e.target.closest("button") || e.target.closest("a")) return;
     e.preventDefault();
-    startTrackDrag(e.clientX);
+    startTrackDrag(e.clientX, e.clientY);
   });
-  window.addEventListener("mousemove", (e) => moveTrackDrag(e.clientX));
+  window.addEventListener("mousemove", (e) =>
+    moveTrackDrag(e.clientX, e.clientY),
+  );
   window.addEventListener("mouseup", endTrackDrag);
 
   track.addEventListener(
     "touchstart",
     (e) => {
-      if (e.touches && e.touches[0]) startTrackDrag(e.touches[0].clientX);
+      if (e.touches && e.touches[0]) {
+        startTrackDrag(e.touches[0].clientX, e.touches[0].clientY);
+      }
     },
     { passive: true },
   );
+
   track.addEventListener(
     "touchmove",
     (e) => {
-      if (e.touches && e.touches[0]) moveTrackDrag(e.touches[0].clientX);
+      if (!isTrackDragging || !e.touches || !e.touches[0]) return;
+
+      const dx = Math.abs(e.touches[0].clientX - trackStartX);
+      const dy = Math.abs(e.touches[0].clientY - trackStartY);
+
+      // Если свайп больше вертикальный — не блокируем скролл страницы
+      if (dy > dx) return;
+
+      e.preventDefault();
+      moveTrackDrag(e.touches[0].clientX, e.touches[0].clientY);
     },
-    { passive: true },
+    { passive: false },
   );
+
   track.addEventListener("touchend", endTrackDrag);
 
+  // === ТАБЫ (горизонтальный скролл + drag) ===
   if (tabsContainer) {
     tabsContainer.addEventListener(
       "wheel",

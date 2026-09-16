@@ -1,6 +1,10 @@
 export async function initContactsMap() {
   const mapContainer = document.getElementById("servicesMap");
-  if (!mapContainer || typeof ymaps3 === "undefined") return;
+  if (!mapContainer) return;
+
+  if (typeof ymaps3 === "undefined") {
+    await loadYandexMapsApi();
+  }
 
   await ymaps3.ready;
 
@@ -18,7 +22,10 @@ export async function initContactsMap() {
     "@yandex/ymaps3-controls@0.0.1",
   );
 
-  const studioCoordinates = [35.931758, 56.827823];
+  // Читаем координаты из data-атрибутов контейнера
+  const lat = parseFloat(mapContainer.dataset.lat) || 56.827823;
+  const lng = parseFloat(mapContainer.dataset.lng) || 35.931758;
+  const studioCoordinates = [lng, lat];
   let isRouteBuilding = false;
   let activeButton = null;
 
@@ -38,21 +45,12 @@ export async function initContactsMap() {
   controlsContainer.addChild(new YMapGeolocationControl({}));
   map.addChild(controlsContainer);
 
-  // Кастомизированный стандартный маркер студии
-  // const studioMarker = new YMapDefaultMarker({
-  //   coordinates: studioCoordinates,
-  //   color: "#a0b196",
-  //   iconName: "custom",
-  //   iconUrl: "/src/assets/icons/logo.svg",
-  // });
-  // map.addChild(studioMarker);
-
   // Создаем абсолютно кастомный маркер-круг
   const studioMarkerElement = document.createElement("div");
   studioMarkerElement.className = "map-marker map-marker--studio";
 
   studioMarkerElement.innerHTML = `
-    <img src="/src/assets/icons/logo.svg" alt="Автосервис">
+    <img src="${window.mapMarkerIcon}" alt="${window.mapMarkerAlt}">
   `;
   const studioMarker = new ymaps3.YMapMarker(
     {
@@ -285,4 +283,25 @@ export async function initContactsMap() {
       setTimeout(() => toast.remove(), 300);
     }, 3000);
   }
+}
+
+function loadYandexMapsApi() {
+  return new Promise((resolve, reject) => {
+    // Если скрипт уже загружается — ждём
+    const existing = document.querySelector(
+      'script[src*="api-maps.yandex.ru"]',
+    );
+    if (existing) {
+      existing.addEventListener("load", resolve);
+      existing.addEventListener("error", reject);
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src =
+      "https://api-maps.yandex.ru/v3/?apikey=db41ff64-1031-4108-a5e1-ad6b420ab6d5&lang=ru_RU";
+    script.onload = resolve;
+    script.onerror = reject;
+    document.head.appendChild(script);
+  });
 }

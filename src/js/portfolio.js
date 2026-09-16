@@ -5,11 +5,16 @@ export function initPortfolioAmbientLight() {
   const wheel = document.getElementById("lightWheel");
   if (!container || !wheel) return;
 
-  const isMobile = window.innerWidth < 1024;
+  const isMobile = window.matchMedia(
+    "(hover: none), (pointer: coarse)",
+  ).matches;
+
   const TOTAL_RAYS = isMobile ? 40 : 120;
   const angleStep = 360 / TOTAL_RAYS;
 
   wheel.innerHTML = "";
+
+  const tweens = [];
 
   for (let i = 0; i < TOTAL_RAYS; i++) {
     const ray = document.createElement("div");
@@ -30,25 +35,56 @@ export function initPortfolioAmbientLight() {
 
     wheel.appendChild(ray);
 
-    gsap.to(ray, {
-      "--beam-w": `${baseWidth * 1.2}px`,
-      "--beam-h": `${baseHeight * 1.3}vh`,
-      "--beam-blur": `${baseBlur * 0.8}px`,
-      duration: 2 + Math.random() * 3,
-      delay: Math.random() * 2,
-      repeat: -1,
-      yoyo: true,
-      ease: "sine.inOut",
-    });
+    // Лучи анимируются только на десктопе
+    if (!isMobile) {
+      const tween = gsap.to(ray, {
+        "--beam-w": `${baseWidth * 1.2}px`,
+        "--beam-h": `${baseHeight * 1.3}vh`,
+        "--beam-blur": `${baseBlur * 0.8}px`,
+        duration: 2 + Math.random() * 3,
+        delay: Math.random() * 2,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+        paused: true,
+      });
+      tweens.push(tween);
+    }
   }
 
-  gsap.to(wheel, {
-    rotate: () => gsap.utils.random(12, 18),
-    duration: () => gsap.utils.random(12, 16),
-    repeat: -1,
-    yoyo: true,
-    ease: "sine.inOut",
-  });
+  // На десктопе — вращение по часовой. На мобильных — без анимации.
+  if (!isMobile) {
+    const wheelTween = gsap.to(wheel, {
+      rotate: 360,
+      duration: 60,
+      repeat: -1,
+      ease: "none",
+      paused: true,
+    });
+    tweens.push(wheelTween);
+  }
+
+  // Запуск/остановка по видимости
+  let isPlaying = false;
+
+  if (tweens.length > 0) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !isPlaying) {
+            tweens.forEach((t) => t.play());
+            isPlaying = true;
+          } else if (!entry.isIntersecting && isPlaying) {
+            tweens.forEach((t) => t.pause());
+            isPlaying = false;
+          }
+        });
+      },
+      { threshold: 0 },
+    );
+
+    observer.observe(container);
+  }
 }
 
 const FALLBACK_FONT_SIZE = 16;
@@ -195,6 +231,11 @@ export function initPortfolioBeforeAfter() {
   const portfolioBlock = document.querySelector(".portfolio");
   if (!portfolioBlock) return;
 
+  const isMobile = window.matchMedia(
+    "(hover: none), (pointer: coarse)",
+  ).matches;
+  const ANIM_DURATION = isMobile ? 0.5 : 0.8;
+
   const allSlides = portfolioBlock.querySelectorAll(".portfolio__slide");
   allSlides.forEach((slide) => {
     const containerBefore = slide.querySelector(
@@ -298,7 +339,7 @@ export function initPortfolioBeforeAfter() {
       {
         "--mask-main": "100%",
         scale: 0.7,
-        duration: 0.8,
+        duration: ANIM_DURATION,
         ease: "expo.out",
       },
       0,
@@ -310,13 +351,19 @@ export function initPortfolioSlider() {
   const portfolioBlock = document.querySelector(".portfolio");
   if (!portfolioBlock) return;
 
+  const isMobile = window.matchMedia(
+    "(hover: none), (pointer: coarse)",
+  ).matches;
+  const ANIM_DURATION = isMobile ? 0.5 : 0.8;
+  const SWIPE_THRESHOLD = isMobile ? 80 : 50;
+
   const track = portfolioBlock.querySelector(".portfolio__track");
   const slides = Array.from(
     portfolioBlock.querySelectorAll(".portfolio__slide"),
   );
   const nav = portfolioBlock.querySelector(".portfolio__nav");
 
-  if (!track || slides.length < 2) return;
+  if (!track) return;
 
   const prevBtn = nav ? nav.querySelector(".prev") : null;
   const nextBtn = nav ? nav.querySelector(".next") : null;
@@ -380,7 +427,7 @@ export function initPortfolioSlider() {
 
     activePortfolioTween = gsap.to(track, {
       x: -targetX,
-      duration: 0.8,
+      duration: ANIM_DURATION,
       ease: "expo.out",
       onComplete: () => {
         activePortfolioTween = null;
@@ -416,33 +463,44 @@ export function initPortfolioSlider() {
   }
 
   let touchStartX = 0;
+  let touchStartY = 0;
   let touchEndX = 0;
+  let touchEndY = 0;
 
   track.addEventListener(
     "touchstart",
     (e) => {
       if (e.changedTouches && e.changedTouches[0]) {
         touchStartX = e.changedTouches[0].screenX;
-      }
-    },
-    { passive: true },
-  );
-  track.addEventListener(
-    "touchend",
-    (e) => {
-      if (e.changedTouches && e.changedTouches[0]) {
-        touchEndX = e.changedTouches[0].screenX;
-        handleSwipe();
+        touchStartY = e.changedTouches[0].screenY;
       }
     },
     { passive: true },
   );
 
-  function handleSwipe() {
-    const swipeThreshold = 50;
-    if (touchStartX - touchEndX > swipeThreshold) moveNext();
-    if (touchEndX - touchStartX > swipeThreshold) movePrev();
-  }
+  track.addEventListener(
+    "touchend",
+    (e) => {
+      if (!e.changedTouches || !e.changedTouches[0]) return;
+
+      touchEndX = e.changedTouches[0].screenX;
+      touchEndY = e.changedTouches[0].screenY;
+
+      const deltaX = Math.abs(touchStartX - touchEndX);
+      const deltaY = Math.abs(touchStartY - touchEndY);
+
+      if (deltaY > deltaX) return;
+
+      if (deltaX < SWIPE_THRESHOLD) return;
+
+      if (touchStartX - touchEndX > 0) {
+        moveNext();
+      } else {
+        movePrev();
+      }
+    },
+    { passive: true },
+  );
 
   window.addEventListener("resize", () => {
     if (track && slides[currentIndex]) {
@@ -515,7 +573,15 @@ export function initPortfolioSlider() {
   } else {
     portfolioOrientationQuery.addListener(handlePortfolioOrientationChange);
   }
+}
 
+export function initPortfolioPopup() {
+  const portfolioBlock = document.querySelector(".portfolio");
+  if (!portfolioBlock) return;
+
+  const slides = Array.from(
+    portfolioBlock.querySelectorAll(".portfolio__slide"),
+  );
   const popup = document.getElementById("portfolioPopup");
   const popupTitle = document.getElementById("portfolioPopupTitle");
   const popupTime = document.getElementById("portfolioPopupTime");
@@ -528,27 +594,24 @@ export function initPortfolioSlider() {
   const popupOverlay = popup ? popup.querySelector(".popup__overlay") : null;
 
   let lastActivePortfolioElement = null;
+  let currentIndex = 0; // будет обновляться извне, если нужно
 
-  function openPortfolioPopup() {
+  function openPortfolioPopup(slide) {
     if (
       !popup ||
       !popupTitle ||
       !popupTime ||
       !popupPrice ||
       !popupText ||
-      !popupList
+      !popupList ||
+      !slide
     )
       return;
 
-    const currentSlide = slides[currentIndex];
-    if (!currentSlide) return;
-
-    const currentTitle = currentSlide.querySelector(".portfolio__info-title");
-    const currentFullText = currentSlide.querySelector(".portfolio__desc-text");
+    const currentTitle = slide.querySelector(".portfolio__info-title");
+    const currentFullText = slide.querySelector(".portfolio__desc-text");
     const currentMetaItems = Array.from(
-      currentSlide.querySelectorAll(
-        ".portfolio__meta-list > .portfolio__meta-item",
-      ),
+      slide.querySelectorAll(".portfolio__meta-list > .portfolio__meta-item"),
     );
 
     if (currentTitle && currentFullText) {
@@ -620,10 +683,13 @@ export function initPortfolioSlider() {
   }
 
   portfolioBlock.addEventListener("click", (e) => {
-    if (e.target.classList.contains("portfolio__more-btn")) {
-      lastActivePortfolioElement = e.target;
-      openPortfolioPopup();
-    }
+    const moreBtn = e.target.closest(".portfolio__more-btn");
+    if (!moreBtn) return;
+
+    lastActivePortfolioElement = moreBtn;
+
+    const slide = moreBtn.closest(".portfolio__slide");
+    openPortfolioPopup(slide);
   });
 
   if (popupCloseBtn) {

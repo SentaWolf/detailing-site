@@ -6,6 +6,9 @@ export function initEqualizer(containerId, trackId, rayTemplate, options = {}) {
   if (!container || !track) return;
 
   const RAY_WIDTH = options.rayWidth || 32;
+  let resizeTimeout = null;
+  let timeline = null;
+  let isVisible = false;
 
   function generateEqualizer() {
     track.innerHTML = "";
@@ -16,7 +19,6 @@ export function initEqualizer(containerId, trackId, rayTemplate, options = {}) {
       const ray = document.createElement("div");
       const config = rayTemplate[i % rayTemplate.length];
 
-      // Новые классы: equalizer-ray + модификатор цвета
       ray.className = `equalizer-ray equalizer-ray--${config.color}`;
       ray.style.height = `${config.height}px`;
       ray.dataset.colorName = config.color;
@@ -24,39 +26,60 @@ export function initEqualizer(containerId, trackId, rayTemplate, options = {}) {
       track.appendChild(ray);
     }
 
-    animateEqualizerWave();
+    // Если блок видим — заново запускаем анимацию после перегенерации
+    if (isVisible) {
+      animateEqualizerWave();
+    } else {
+      // Иначе — статичные цвета
+      setStaticColors();
+    }
   }
 
+  function setStaticColors() {
+    const allRays = track.querySelectorAll(".equalizer-ray");
+    allRays.forEach((ray) => {
+      const color = ray.dataset.colorName;
+      const normal = colorMap[color]?.normal || "rgba(255,255,255,0.2)";
+      ray.style.backgroundColor = normal;
+    });
+  }
+
+  const colorMap = {
+    cream: {
+      active: "rgba(255, 234, 197, 0.5)",
+      normal: "rgba(255, 234, 197, 0.2)",
+    },
+    "light-blue": {
+      active: "rgba(226, 232, 240, 0.5)",
+      normal: "rgba(226, 232, 240, 0.2)",
+    },
+    "light-green": {
+      active: "rgba(160, 177, 150, 0.5)",
+      normal: "rgba(160, 177, 150, 0.2)",
+    },
+    "dark-green": {
+      active: "rgba(104, 112, 105, 0.5)",
+      normal: "rgba(104, 112, 105, 0.2)",
+    },
+    "dark-blue": {
+      active: "rgba(160, 174, 192, 0.5)",
+      normal: "rgba(160, 174, 192, 0.2)",
+    },
+  };
+
   function animateEqualizerWave() {
+    // Сначала убиваем старый timeline, если он был
+    if (timeline) {
+      timeline.kill();
+      timeline = null;
+    }
+
     const allRays = track.querySelectorAll(".equalizer-ray");
     if (allRays.length === 0) return;
 
-    const colorMap = {
-      cream: {
-        active: "rgba(255, 234, 197, 0.5)",
-        normal: "rgba(255, 234, 197, 0.2)",
-      },
-      "light-blue": {
-        active: "rgba(226, 232, 240, 0.5)",
-        normal: "rgba(226, 232, 240, 0.2)",
-      },
-      "light-green": {
-        active: "rgba(160, 177, 150, 0.5)",
-        normal: "rgba(160, 177, 150, 0.2)",
-      },
-      "dark-green": {
-        active: "rgba(104, 112, 105, 0.5)",
-        normal: "rgba(104, 112, 105, 0.2)",
-      },
-      "dark-blue": {
-        active: "rgba(160, 174, 192, 0.5)",
-        normal: "rgba(160, 174, 192, 0.2)",
-      },
-    };
+    timeline = gsap.timeline({ repeat: -1 });
 
-    const tl = gsap.timeline({ repeat: -1 });
-
-    tl.to(allRays, {
+    timeline.to(allRays, {
       duration: 0.15,
       stagger: {
         each: 0.08,
@@ -74,13 +97,35 @@ export function initEqualizer(containerId, trackId, rayTemplate, options = {}) {
 
   generateEqualizer();
 
+  // Останавливаем анимацию, когда блок ушёл за экран
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          isVisible = entry.isIntersecting;
+
+          if (isVisible) {
+            animateEqualizerWave();
+          } else {
+            if (timeline) {
+              timeline.pause();
+            }
+          }
+        });
+      },
+      { threshold: 0 },
+    );
+
+    observer.observe(container);
+  }
+
   window.addEventListener("resize", () => {
-    if (window.equalizerTimeout) clearTimeout(window.equalizerTimeout);
-    window.equalizerTimeout = setTimeout(generateEqualizer, 200);
+    if (resizeTimeout) clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(generateEqualizer, 200);
   });
 }
 
-const contactsTemplate = [
+export const contactsTemplate = [
   { height: 80, color: "cream" },
   { height: 70, color: "light-blue" },
   { height: 60, color: "light-green" },
@@ -98,7 +143,7 @@ initEqualizer(
   contactsTemplate,
 );
 
-const reviewsTemplate = [
+export const reviewsTemplate = [
   { height: 40, color: "dark-blue" },
   { height: 50, color: "dark-green" },
   { height: 60, color: "light-green" },
@@ -116,7 +161,7 @@ initEqualizer(
   reviewsTemplate,
 );
 
-const servicesTemplate = [
+export const servicesTemplate = [
   { height: 80, color: "cream" },
   { height: 70, color: "light-blue" },
   { height: 60, color: "light-green" },
@@ -132,4 +177,22 @@ initEqualizer(
   "servicesEqualizerAmbient",
   "servicesEqualizerTrack",
   servicesTemplate,
+);
+
+export const galleryTemplate = [
+  { height: 40, color: "dark-blue" },
+  { height: 50, color: "dark-green" },
+  { height: 60, color: "light-green" },
+  { height: 70, color: "light-blue" },
+  { height: 80, color: "cream" },
+  { height: 80, color: "cream" },
+  { height: 70, color: "light-blue" },
+  { height: 60, color: "light-green" },
+  { height: 50, color: "dark-green" },
+  { height: 40, color: "dark-blue" },
+];
+initEqualizer(
+  "galleryEqualizerAmbient",
+  "galleryEqualizerTrack",
+  galleryTemplate,
 );

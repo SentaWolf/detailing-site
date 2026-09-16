@@ -190,10 +190,10 @@
     }
 
     &--left {
-      background-image: url("/src/assets/icons/chevron-left.svg");
+      background-image: url("../../icons/chevron-left.svg");
     }
     &--right {
-      background-image: url("/src/assets/icons/chevron-right.svg");
+      background-image: url("../../icons/chevron-right.svg");
     }
   }
 
@@ -402,8 +402,8 @@
       width: 24px;
       height: 24px;
       background-color: white;
-      -webkit-mask-image: url("/src/assets/icons/show-more.svg");
-      mask-image: url("/src/assets/icons/show-more.svg");
+      -webkit-mask-image: url("../../icons/show-more.svg");
+      mask-image: url("../../icons/show-more.svg");
       mask-position: center;
       mask-repeat: no-repeat;
       mask-size: contain;
