@@ -25,7 +25,7 @@
       .layer-bg__img {
         z-index: 3;
         @include container-base;
-        background-image: url("../../images/car.webp");
+        background-image: url("@/assets/images/car.webp");
         height: 100%;
         background-repeat: no-repeat;
         background-position: center bottom;
@@ -82,7 +82,7 @@
         transition: opacity 0.4s ease;
 
         @media (hover: hover) {
-          background-image: url("../../images/beams.webp");
+          background-image: url("@/assets/images/beams.webp");
           background-repeat: no-repeat;
           background-position: center top;
           background-size: 100% 85%;
@@ -281,7 +281,7 @@
           filter 0.5s ease-in-out;
 
         @media (hover: hover) {
-          background-image: url("../../images/car-body.webp");
+          background-image: url("@/assets/images/car-body.webp");
         }
       }
 
@@ -289,7 +289,7 @@
         pointer-events: none;
         position: relative;
         z-index: 2;
-        background-image: url("../../images/car-lights.webp");
+        background-image: url("@/assets/images/car-lights.webp");
         height: 100%;
         width: 100%;
         background-repeat: no-repeat;
@@ -498,7 +498,7 @@
             aspect-ratio: 16 / 19;
             height: 24px;
             flex-shrink: 0;
-            background-image: url("../../icons/arrow-down.svg");
+            background-image: url("@/assets/icons/arrow-down.svg");
             background-repeat: no-repeat;
             background-position: center center;
             background-size: contain;

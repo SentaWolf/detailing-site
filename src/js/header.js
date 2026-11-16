@@ -5,7 +5,6 @@ gsap.registerPlugin(ScrollToPlugin, ScrollTrigger);
 
 export function initHeaderMenuScroll() {
   const headerNav = document.querySelector(".header__nav");
-  const logo = document.querySelector(".header__logo");
 
   const menuBtn = document.querySelector(".header__menu-trigger--opened");
   const mobileMenu = document.querySelector(".mobile-menu");
@@ -73,9 +72,16 @@ export function initHeaderMenuScroll() {
     }
   });
 
+  // Логотип — не скроллим на мобильных, чтобы избежать случайных «прыжков вверх»
   document.addEventListener("click", (e) => {
     const logoLink = e.target.closest(".header__logo");
     if (!logoLink) return;
+
+    // Пропускаем клики с клавиатуры (у них detail === 0)
+    if (e.detail === 0) return;
+
+    const isMobile = mediaQuery.matches;
+    if (isMobile) return; // на мобильных — обычный переход по href
 
     e.preventDefault();
 

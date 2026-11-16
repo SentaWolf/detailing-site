@@ -50,7 +50,7 @@ export async function initContactsMap() {
   studioMarkerElement.className = "map-marker map-marker--studio";
 
   studioMarkerElement.innerHTML = `
-    <img src="${window.mapMarkerIcon}" alt="${window.mapMarkerAlt}">
+    <img src="${import.meta.env.BASE_URL}logo.svg" alt="Детейлинг студия Automania">
   `;
   const studioMarker = new ymaps3.YMapMarker(
     {
@@ -93,11 +93,11 @@ export async function initContactsMap() {
           <div class="address-modal__divider">или укажите адрес вручную</div>
         </div>
         <input type="text" 
-  class="address-modal__input" 
-  id="userAddress"
-  name="address"
-  placeholder="Например: Тверь, ул. Ленина, 10"
-  autocomplete="street-address">
+              class="address-modal__input" 
+              id="userAddress"
+              name="address"
+              placeholder="Например: Тверь, ул. Ленина, 10"
+              autocomplete="street-address">
         <div class="address-modal__error" style="display:none;color:#ff6b6b;font-size:12px;margin-top:8px;"></div>
       </div>
       <div class="address-modal__footer">

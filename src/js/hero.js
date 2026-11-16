@@ -22,6 +22,12 @@ export function initHeroAnchorScroll() {
 }
 
 export function initHeroAnimation() {
+  // Отключаем эффект на тач-устройствах
+  const isTouchDevice = window.matchMedia(
+    "(hover: none), (pointer: coarse)",
+  ).matches;
+  if (isTouchDevice) return;
+
   const getElements = () => ({
     carTrigger: document.querySelector(".car-trigger"),
     layerBg: document.querySelector(".layer-bg"),
@@ -186,8 +192,7 @@ export function animateHeroLinesOnLoad() {
 
   // На мобильных — после появления запускаем постоянные «прыжки»
   if (isMobile) {
-    tl.then(() => {
-      // Сохраняем все tween'ы
+    tl.eventCallback("onComplete", () => {
       const jumpTweens = [];
 
       allLines.forEach((line, index) => {
@@ -198,12 +203,11 @@ export function animateHeroLinesOnLoad() {
           repeat: -1,
           yoyo: true,
           ease: "sine.inOut",
-          paused: true, // ← стартуем на паузе
+          paused: true,
         });
         jumpTweens.push(tween);
       });
 
-      // Запускаем/останавливаем по видимости
       const heroBlock = document.querySelector(".hero");
       if (!heroBlock) return;
 

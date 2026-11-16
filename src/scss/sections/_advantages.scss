@@ -22,7 +22,7 @@
   background-color: $bg-main;
   background-image:
     linear-gradient(rgba($bg-main, 0.3), rgba($bg-main, 0.3)),
-    url("../../images/advantages-bubles.webp");
+    url("@/assets/images/advantages-bubles.webp");
   background-repeat: no-repeat;
   background-position: top left;
   background-size: auto min(100vh, 960px);
@@ -244,7 +244,7 @@
       aspect-ratio: 1 / 1;
       border-radius: 50%;
       background-color: rgba(255, 255, 255, 0.1);
-      background-image: url("../../icons/card-small-icon.svg");
+      background-image: url("@/assets/icons/card-small-icon.svg");
       background-repeat: no-repeat;
       background-position: center;
       background-size: contain;
@@ -456,8 +456,8 @@
       width: 24px;
       height: 24px;
       background-color: $bg-main;
-      -webkit-mask-image: url("../../icons/show-more.svg");
-      mask-image: url("../../icons/show-more.svg");
+      -webkit-mask-image: url("@/assets/icons/show-more.svg");
+      mask-image: url("@/assets/icons/show-more.svg");
       mask-position: center;
       mask-repeat: no-repeat;
       mask-size: contain;
@@ -614,10 +614,10 @@
       cursor: pointer;
 
       &.prev {
-        background-image: url("../../icons/arrow-prev.svg");
+        background-image: url("@/assets/icons/arrow-prev.svg");
       }
       &.next {
-        background-image: url("../../icons/arrow-next.svg");
+        background-image: url("@/assets/icons/arrow-next.svg");
       }
 
       @media (hover: hover) {
@@ -677,8 +677,8 @@
       border-radius: 0 24px 24px 0;
       padding: 24px;
       background-image:
-        url("../../images/bubles-top-left.webp"),
-        url("../../images/bubles-bottom-right.webp");
+        url("@/assets/images/bubles-top-left.webp"),
+        url("@/assets/images/bubles-bottom-right.webp");
       background-repeat: no-repeat, no-repeat;
       background-size:
         40% auto,
