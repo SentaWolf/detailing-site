@@ -19,7 +19,7 @@
 * Полная адаптивность под десктопные, планшетные и мобильные устройства
 
 ## 🚀 Локальный запуск проекта
-1. Клонировать репозиторий: `git clone https://sentawolf.github.com/detailing-site/`
+1. Клонировать репозиторий: `git clone https://github.com/SentaWolf/detailing-site.git`
 2. Установить зависимости: `npm install`
 3. Запустить сервер для разработки: `npm run dev`
 4. Собрать проект в продакшн: `npm run build`
